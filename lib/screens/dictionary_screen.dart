@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import '../config/colors.dart';
 import '../models/dictionary_word.dart';
 import '../providers/dictionary_provider.dart';
-
+import '../widgets/cached_video_player.dart';
 /// ASL İşaret Dili Sözlüğü Ekranı
 class DictionaryScreen extends StatelessWidget {
   const DictionaryScreen({super.key});
@@ -51,7 +51,7 @@ class DictionaryScreen extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
-                      color: AppColors.accent.withOpacity(0.15),
+                      color: AppColors.accent.withValues(alpha: 0.15),
                       shape: BoxShape.circle,
                     ),
                     child: const Icon(
@@ -140,10 +140,12 @@ class DictionaryScreen extends StatelessWidget {
 
               // ─── Kelime Listesi Grid ───
               Expanded(
-                child: words.isEmpty
-                    ? Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
+                child: provider.isLoading
+                    ? const Center(child: CircularProgressIndicator(color: AppColors.primary))
+                    : words.isEmpty
+                        ? Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Icon(
                               Icons.search_off_rounded,
@@ -205,7 +207,7 @@ class _WordCard extends StatelessWidget {
           ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.04),
+              color: Colors.black.withValues(alpha: 0.04),
               blurRadius: 10,
               offset: const Offset(0, 4),
             ),
@@ -221,7 +223,7 @@ class _WordCard extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: AppColors.primary.withOpacity(0.12),
+                    color: AppColors.primary.withValues(alpha: 0.12),
                     shape: BoxShape.circle,
                   ),
                   child: const Icon(
@@ -233,7 +235,7 @@ class _WordCard extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                   decoration: BoxDecoration(
-                    color: AppColors.secondary.withOpacity(0.15),
+                    color: AppColors.secondary.withValues(alpha: 0.15),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Text(
@@ -304,41 +306,24 @@ class _WordCard extends StatelessWidget {
               const SizedBox(height: 20),
 
               // İşaret Kartı/Animasyonu
-              Container(
-                height: 180,
+              SizedBox(
+                height: 220,
                 width: double.infinity,
-                decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    colors: [Color(0xFF1E1E38), Color(0xFF0F0F23)],
-                  ),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(18),
-                      decoration: const BoxDecoration(
-                        gradient: LinearGradient(colors: AppColors.primaryGradient),
-                        shape: BoxShape.circle,
+                child: word.videoUrl.isNotEmpty
+                    ? CachedVideoPlayerWidget(
+                        videoUrl: word.videoUrl,
+                        autoPlay: true,
+                        loop: true,
+                      )
+                    : Container(
+                        decoration: BoxDecoration(
+                          color: AppColors.primary.withValues(alpha: 0.1),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: const Center(
+                          child: Text('Video bulunamadı'),
+                        ),
                       ),
-                      child: const Icon(
-                        Icons.back_hand_rounded,
-                        size: 48,
-                        color: Colors.white,
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    Text(
-                      word.word,
-                      style: const TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ],
-                ),
               ),
               const SizedBox(height: 20),
 

@@ -173,9 +173,7 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
                   if (recognitionProvider.isRecognizing) {
                     recognitionProvider.stopRecognition();
                   } else {
-                    recognitionProvider.startRecognition(
-                      intervalMs: settingsProvider.inferenceIntervalMs,
-                    );
+                    recognitionProvider.startRecognition(_cameraController);
                   }
                 },
                 onClear: () => recognitionProvider.clearSentence(),

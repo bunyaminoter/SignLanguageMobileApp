@@ -1,3 +1,5 @@
+import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../config/colors.dart';
@@ -36,12 +38,12 @@ class SettingsScreen extends StatelessWidget {
                     const SizedBox(height: 8),
 
                     // ─── Tanıma Ayarları ───
-                    _buildSectionHeader('Recognition', Icons.psychology_rounded),
+                    _buildSectionHeader('settings.sections.recognition'.tr(), Icons.psychology_rounded),
                     _buildCard(
                       isDark: isDark,
                       children: [
                         _buildSliderTile(
-                          title: 'Confidence Threshold',
+                          title: 'settings.items.confidence'.tr(),
                           subtitle:
                               '${(settings.confidenceThreshold * 100).toInt()}%',
                           value: settings.confidenceThreshold,
@@ -52,7 +54,7 @@ class SettingsScreen extends StatelessWidget {
                         ),
                         _buildDivider(isDark),
                         _buildSliderTile(
-                          title: 'Inference Interval',
+                          title: 'settings.items.interval'.tr(),
                           subtitle: '${settings.inferenceIntervalMs}ms',
                           value: settings.inferenceIntervalMs.toDouble(),
                           min: 1000,
@@ -68,28 +70,28 @@ class SettingsScreen extends StatelessWidget {
 
                     // ─── Ses Ayarları ───
                     _buildSectionHeader(
-                        'Text-to-Speech', Icons.record_voice_over_rounded),
+                        'settings.sections.tts'.tr(), Icons.record_voice_over_rounded),
                     _buildCard(
                       isDark: isDark,
                       children: [
                         _buildSwitchTile(
-                          title: 'Enable TTS',
-                          subtitle: 'Read recognized signs aloud',
+                          title: 'settings.items.enable_tts'.tr(),
+                          subtitle: 'settings.items.enable_tts_sub'.tr(),
                           value: settings.ttsEnabled,
                           onChanged: (_) => settings.toggleTts(),
                           isDark: isDark,
                         ),
                         _buildDivider(isDark),
                         _buildSwitchTile(
-                          title: 'Auto-Speak',
-                          subtitle: 'Speak each word automatically',
+                          title: 'settings.items.auto_speak'.tr(),
+                          subtitle: 'settings.items.auto_speak_sub'.tr(),
                           value: settings.autoSpeak,
                           onChanged: (_) => settings.toggleAutoSpeak(),
                           isDark: isDark,
                         ),
                         _buildDivider(isDark),
                         _buildDropdownTile(
-                          title: 'Language',
+                          title: 'settings.items.tts_lang'.tr(),
                           value: settings.ttsLanguage,
                           items: const {
                             'en-US': 'English (US)',
@@ -101,7 +103,7 @@ class SettingsScreen extends StatelessWidget {
                         ),
                         _buildDivider(isDark),
                         _buildSliderTile(
-                          title: 'Speech Rate',
+                          title: 'settings.items.tts_rate'.tr(),
                           subtitle: '${settings.ttsRate.toStringAsFixed(1)}x',
                           value: settings.ttsRate,
                           min: 0.25,
@@ -114,48 +116,103 @@ class SettingsScreen extends StatelessWidget {
                     const SizedBox(height: 16),
 
                     // ─── Görünüm Ayarları ───
-                    _buildSectionHeader('Appearance', Icons.palette_rounded),
+                    _buildSectionHeader('settings.sections.appearance'.tr(), Icons.palette_rounded),
                     _buildCard(
                       isDark: isDark,
                       children: [
                         _buildSwitchTile(
-                          title: 'Dark Mode',
-                          subtitle: 'Toggle dark/light theme',
+                          title: 'settings.items.dark_mode'.tr(),
+                          subtitle: 'settings.items.dark_mode_sub'.tr(),
                           value: settings.isDarkMode,
                           onChanged: (_) => settings.toggleDarkMode(),
                           isDark: isDark,
                         ),
                         _buildDivider(isDark),
                         _buildSwitchTile(
-                          title: 'Show Landmarks',
-                          subtitle: 'Display pose landmarks on camera',
+                          title: 'settings.items.landmarks'.tr(),
+                          subtitle: 'settings.items.landmarks_sub'.tr(),
                           value: settings.showLandmarks,
                           onChanged: (_) => settings.toggleLandmarks(),
+                          isDark: isDark,
+                        ),
+                        _buildDivider(isDark),
+                        _buildDropdownTile(
+                          title: 'settings.items.app_lang'.tr(),
+                          value: context.locale.languageCode,
+                          items: const {
+                            'en': 'English',
+                            'tr': 'Türkçe',
+                          },
+                          onChanged: (v) {
+                            if (v != null) {
+                              context.setLocale(Locale(v, v == 'en' ? 'US' : 'TR'));
+                            }
+                          },
                           isDark: isDark,
                         ),
                       ],
                     ),
                     const SizedBox(height: 16),
 
+                    // ─── Veri & Önbellek ───
+                    _buildSectionHeader('settings.sections.data'.tr(), Icons.storage_rounded),
+                    _buildCard(
+                      isDark: isDark,
+                      children: [
+                        ListTile(
+                          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 2),
+                          title: Text(
+                            'settings.items.clear_cache'.tr(),
+                            style: TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w500,
+                              color: isDark ? AppColors.darkText : AppColors.lightText,
+                            ),
+                          ),
+                          subtitle: Text(
+                            'settings.items.clear_cache_sub'.tr(),
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: isDark ? AppColors.darkTextMuted : AppColors.lightTextMuted,
+                            ),
+                          ),
+                          trailing: Icon(Icons.delete_sweep_rounded, color: AppColors.primaryPurple, size: 24),
+                          onTap: () async {
+                            await DefaultCacheManager().emptyCache();
+                            if (context.mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text('settings.items.cache_cleared'.tr()),
+                                  backgroundColor: AppColors.primary,
+                                  duration: const Duration(seconds: 2),
+                                ),
+                              );
+                            }
+                          },
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+
                     // ─── Uygulama Bilgileri ───
-                    _buildSectionHeader('About', Icons.info_outline_rounded),
+                    _buildSectionHeader('settings.sections.about'.tr(), Icons.info_outline_rounded),
                     _buildCard(
                       isDark: isDark,
                       children: [
                         _buildInfoTile(
-                          title: 'Version',
+                          title: 'settings.items.version'.tr(),
                           value: '1.0.0',
                           isDark: isDark,
                         ),
                         _buildDivider(isDark),
                         _buildInfoTile(
-                          title: 'Model',
+                          title: 'settings.items.model'.tr(),
                           value: 'Hybrid ASL (10-Class Baseline)',
                           isDark: isDark,
                         ),
                         _buildDivider(isDark),
                         _buildInfoTile(
-                          title: 'Classes',
+                          title: 'settings.items.classes'.tr(),
                           value: '10 ASL Signs',
                           isDark: isDark,
                         ),
@@ -201,7 +258,7 @@ class SettingsScreen extends StatelessWidget {
           ),
           const SizedBox(width: 12),
           Text(
-            'Settings',
+            'settings.title'.tr(),
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.w700,

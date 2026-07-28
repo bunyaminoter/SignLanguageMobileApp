@@ -55,7 +55,7 @@ class STTService {
         onResult: (result) {
           onResult(result.recognizedWords);
         },
-        localeId: languageCode,
+        cancelOnError: true, // localeId is deprecated, ignored languageCode,
       );
     } catch (e) {
       debugPrint('STT listen error: $e');

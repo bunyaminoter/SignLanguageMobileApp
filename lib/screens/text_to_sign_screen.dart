@@ -78,7 +78,7 @@ class _TextToSignScreenState extends State<TextToSignScreen> {
                   Container(
                     padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
-                      color: AppColors.secondary.withOpacity(0.15),
+                      color: AppColors.secondary.withValues(alpha: 0.15),
                       shape: BoxShape.circle,
                     ),
                     child: const Icon(
@@ -102,7 +102,7 @@ class _TextToSignScreenState extends State<TextToSignScreen> {
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.05),
+                      color: Colors.black.withValues(alpha: 0.05),
                       blurRadius: 10,
                       offset: const Offset(0, 4),
                     ),
@@ -145,8 +145,8 @@ class _TextToSignScreenState extends State<TextToSignScreen> {
                             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
                             decoration: BoxDecoration(
                               color: provider.isListening
-                                  ? AppColors.error.withOpacity(0.15)
-                                  : AppColors.primary.withOpacity(0.1),
+                                  ? AppColors.error.withValues(alpha: 0.15)
+                                  : AppColors.primary.withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(16),
                               border: Border.all(
                                 color: provider.isListening ? AppColors.error : AppColors.primary,

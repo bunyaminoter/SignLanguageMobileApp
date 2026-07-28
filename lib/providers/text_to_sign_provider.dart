@@ -1,36 +1,38 @@
 import 'package:flutter/foundation.dart';
-import '../config/constants.dart';
+import '../models/dictionary_word.dart';
+import '../services/database_service.dart';
 import '../services/stt_service.dart';
 
 class TextToSignProvider extends ChangeNotifier {
   final STTService _sttService = STTService();
+  final DatabaseService _dbService = DatabaseService();
 
   String _inputText = '';
-  List<String> _sequenceWords = [];
+  List<DictionaryWord> _sequenceWords = [];
   int _currentWordIndex = 0;
   bool _isPlaying = false;
   bool _isListening = false;
   double _playbackSpeed = 1.0;
 
   String get inputText => _inputText;
-  List<String> get sequenceWords => _sequenceWords;
+  List<DictionaryWord> get sequenceWords => _sequenceWords;
   int get currentWordIndex => _currentWordIndex;
   bool get isPlaying => _isPlaying;
   bool get isListening => _isListening;
   double get playbackSpeed => _playbackSpeed;
 
-  String get currentWord =>
+  DictionaryWord? get currentWord =>
       (_sequenceWords.isNotEmpty && _currentWordIndex < _sequenceWords.length)
           ? _sequenceWords[_currentWordIndex]
-          : '';
+          : null;
 
   void setInputText(String text) {
     _inputText = text;
     notifyListeners();
   }
 
-  /// Metni işleyip kelimelerine ayır
-  void convertTextToSignSequence() {
+  /// Metni işleyip veritabanında ara (veya harf harf böl)
+  Future<void> convertTextToSignSequence() async {
     if (_inputText.trim().isEmpty) return;
 
     // Metni kelimelere böl (noktalama işaretlerini kaldır, büyük harf yap)
@@ -41,9 +43,27 @@ class TextToSignProvider extends ChangeNotifier {
         .where((w) => w.isNotEmpty)
         .toList();
 
-    _sequenceWords = words;
+    List<DictionaryWord> newSequence = [];
+
+    for (var w in words) {
+      final dbWord = await _dbService.searchWord(w);
+      if (dbWord != null) {
+        newSequence.add(dbWord);
+      } else {
+        // Kelime sözlükte yoksa harf harf (Finger-spelling) ekle
+        for (var i = 0; i < w.length; i++) {
+          final letter = w[i];
+          final dbLetter = await _dbService.searchWord(letter);
+          if (dbLetter != null) {
+            newSequence.add(dbLetter);
+          }
+        }
+      }
+    }
+
+    _sequenceWords = newSequence;
     _currentWordIndex = 0;
-    _isPlaying = words.isNotEmpty;
+    _isPlaying = _sequenceWords.isNotEmpty;
     notifyListeners();
   }
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 import '../config/colors.dart';
 import '../widgets/feature_card.dart';
 
@@ -48,16 +49,19 @@ class HomeScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-                  Container(
-                    padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      color: AppColors.primary.withOpacity(0.12),
-                      shape: BoxShape.circle,
-                    ),
-                    child: const Icon(
-                      Icons.sign_language_rounded,
-                      size: 26,
-                      color: AppColors.primary,
+                  GestureDetector(
+                    onTap: () => Navigator.pushNamed(context, '/settings'),
+                    child: Container(
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        color: AppColors.primary.withValues(alpha: 0.12),
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(
+                        Icons.settings_rounded,
+                        size: 26,
+                        color: AppColors.primary,
+                      ),
                     ),
                   ),
                 ],
@@ -77,7 +81,7 @@ class HomeScreen extends StatelessWidget {
                   borderRadius: BorderRadius.circular(24),
                   boxShadow: [
                     BoxShadow(
-                      color: const Color(0xFF6366F1).withOpacity(0.3),
+                      color: const Color(0xFF6366F1).withValues(alpha: 0.3),
                       blurRadius: 16,
                       offset: const Offset(0, 6),
                     ),
@@ -92,7 +96,7 @@ class HomeScreen extends StatelessWidget {
                           Container(
                             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                             decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.2),
+                              color: Colors.white.withValues(alpha: 0.2),
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: const Text(
@@ -118,7 +122,7 @@ class HomeScreen extends StatelessWidget {
                             'Kameradan metne veya sesinizi işaret diline çevirin.',
                             style: TextStyle(
                               fontSize: 12,
-                              color: Colors.white.withOpacity(0.9),
+                              color: Colors.white.withValues(alpha: 0.9),
                             ),
                           ),
                         ],
@@ -150,7 +154,7 @@ class HomeScreen extends StatelessWidget {
                 title: 'İşaret Dili ➔ Metin / Ses',
                 subtitle: 'Kameranızı tutarak işaret dilini canlı algılayın ve sese çevirin.',
                 icon: Icons.camera_front_rounded,
-                badgeText: 'CANLI ALGILAMA',
+                badgeText: 'home.cards.camera.badge'.tr(),
                 gradientColors: const [
                   Color(0xFF3B82F6),
                   Color(0xFF1D4ED8),

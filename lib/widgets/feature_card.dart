@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../config/colors.dart';
 
 class FeatureCard extends StatelessWidget {
   final String title;
@@ -34,7 +33,7 @@ class FeatureCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(24),
           boxShadow: [
             BoxShadow(
-              color: gradientColors.first.withOpacity(0.3),
+              color: gradientColors.first.withValues(alpha: 0.3),
               blurRadius: 16,
               offset: const Offset(0, 6),
             ),
@@ -52,7 +51,7 @@ class FeatureCard extends StatelessWidget {
                     Container(
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.2),
+                        color: Colors.white.withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(16),
                       ),
                       child: Icon(
@@ -68,7 +67,7 @@ class FeatureCard extends StatelessWidget {
                           vertical: 4,
                         ),
                         decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.25),
+                          color: Colors.white.withValues(alpha: 0.25),
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: Text(
@@ -100,7 +99,7 @@ class FeatureCard extends StatelessWidget {
                       subtitle,
                       style: TextStyle(
                         fontSize: 13,
-                        color: Colors.white.withOpacity(0.85),
+                        color: Colors.white.withValues(alpha: 0.85),
                       ),
                     ),
                   ],

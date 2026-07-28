@@ -1,15 +1,17 @@
 import 'package:flutter/foundation.dart';
-import '../config/constants.dart';
 import '../models/dictionary_word.dart';
+import '../services/database_service.dart';
 
 class DictionaryProvider extends ChangeNotifier {
-  final List<DictionaryWord> _words = [];
+  List<DictionaryWord> _words = [];
   String _searchQuery = '';
   String _selectedCategory = 'Tümü';
+  bool _isLoading = true;
 
   List<DictionaryWord> get allWords => _words;
   String get searchQuery => _searchQuery;
   String get selectedCategory => _selectedCategory;
+  bool get isLoading => _isLoading;
 
   List<String> get categories => [
         'Tümü',
@@ -22,26 +24,21 @@ class DictionaryProvider extends ChangeNotifier {
       ];
 
   DictionaryProvider() {
-    _loadSampleWords();
+    loadWordsFromDatabase();
   }
 
-  void _loadSampleWords() {
-    final labels = AppConstants.aslClassLabels;
-    final categoriesList = ['Genel', 'Nesneler', 'Eylemler', 'Sorular', 'Zaman', 'Duygular'];
-    
-    for (int i = 0; i < labels.length; i++) {
-      final label = labels[i];
-      final cat = categoriesList[i % categoriesList.length];
-      _words.add(
-        DictionaryWord(
-          id: i.toString(),
-          word: label.toUpperCase(),
-          category: cat,
-          description: '$label kelimesinin Amerikan İşaret Dilindeki (ASL) karşılığı.',
-          difficulty: i % 3 == 0 ? 'Kolay' : (i % 3 == 1 ? 'Orta' : 'Zor'),
-        ),
-      );
+  Future<void> loadWordsFromDatabase() async {
+    _isLoading = true;
+    notifyListeners();
+
+    try {
+      _words = await DatabaseService().getAllWords();
+    } catch (e) {
+      debugPrint('Kelimeler yüklenirken hata oluştu: $e');
     }
+
+    _isLoading = false;
+    notifyListeners();
   }
 
   List<DictionaryWord> get filteredWords {

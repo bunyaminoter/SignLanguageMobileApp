@@ -1,0 +1,77 @@
+{
+  "onboarding": {
+    "welcome": {
+      "title": "Welcome to ASL",
+      "desc": "The easiest way to learn and translate American Sign Language (ASL)."
+    },
+    "dictionary": {
+      "title": "Offline Dictionary",
+      "desc": "Watch and learn sign language videos of hundreds of words even without internet."
+    },
+    "camera": {
+      "title": "Camera & Translate",
+      "desc": "Convert signs to voice and text in real-time using your camera."
+    },
+    "next": "Next",
+    "start": "Start"
+  },
+  "home": {
+    "welcome": "Welcome 👋",
+    "app_name": "ASL Translator",
+    "banner": {
+      "badge": "Two-Way Translation",
+      "title": "Communication Without Barriers",
+      "desc": "Translate from camera to text or your voice to sign language."
+    },
+    "modes_title": "Translation Modes",
+    "cards": {
+      "camera": {
+        "title": "Sign Language ➔ Text / Voice",
+        "desc": "Hold your camera to detect sign language live and translate to voice.",
+        "badge": "LIVE DETECTION"
+      },
+      "voice": {
+        "title": "Text / Voice ➔ Sign Language",
+        "desc": "Speak or type, ASL videos will play sequentially.",
+        "badge": "VIDEO TRANSLATOR"
+      },
+      "dictionary": {
+        "title": "ASL Sign Dictionary",
+        "desc": "Search and watch videos of 100+ sign language words.",
+        "badge": "LIBRARY"
+      }
+    }
+  },
+  "settings": {
+    "title": "Settings",
+    "sections": {
+      "recognition": "Recognition",
+      "tts": "Text-to-Speech",
+      "appearance": "Appearance",
+      "data": "Data & Cache",
+      "about": "About",
+      "language": "Language"
+    },
+    "items": {
+      "confidence": "Confidence Threshold",
+      "interval": "Inference Interval",
+      "enable_tts": "Enable TTS",
+      "enable_tts_sub": "Read recognized signs aloud",
+      "auto_speak": "Auto-Speak",
+      "auto_speak_sub": "Speak each word automatically",
+      "tts_lang": "Speech Language",
+      "tts_rate": "Speech Rate",
+      "dark_mode": "Dark Mode",
+      "dark_mode_sub": "Toggle dark/light theme",
+      "landmarks": "Show Landmarks",
+      "landmarks_sub": "Display pose landmarks on camera",
+      "clear_cache": "Clear Video Cache",
+      "clear_cache_sub": "Free up device storage",
+      "cache_cleared": "Video cache cleared successfully!",
+      "version": "Version",
+      "model": "Model",
+      "classes": "Classes",
+      "app_lang": "App Language"
+    }
+  }
+}

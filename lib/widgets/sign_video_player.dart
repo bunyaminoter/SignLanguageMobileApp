@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../config/colors.dart';
 import '../providers/text_to_sign_provider.dart';
+import 'cached_video_player.dart';
 
-/// ASL İşaret Dili Video/İşaret Oynatıcısı
+/// ASL İşaret Dili Video/İşaret Oynatıcısı (Faz 6 & 7)
 class SignVideoPlayer extends StatefulWidget {
   const SignVideoPlayer({super.key});
 
@@ -25,7 +26,9 @@ class _SignVideoPlayerState extends State<SignVideoPlayer> {
     _playbackTimer?.cancel();
     if (!provider.isPlaying || provider.sequenceWords.isEmpty) return;
 
-    final durationMs = (1500 / provider.playbackSpeed).round();
+    // TODO: Ideally, we'd listen to the actual video end event.
+    // For now, simulating transition with a timer depending on speed.
+    final durationMs = (2500 / provider.playbackSpeed).round();
     _playbackTimer = Timer.periodic(Duration(milliseconds: durationMs), (_) {
       if (mounted) {
         final p = context.read<TextToSignProvider>();
@@ -70,7 +73,7 @@ class _SignVideoPlayerState extends State<SignVideoPlayer> {
             Container(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
-                color: AppColors.primary.withOpacity(0.1),
+                color: AppColors.primary.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
               child: const Icon(
@@ -102,6 +105,8 @@ class _SignVideoPlayerState extends State<SignVideoPlayer> {
     }
 
     final currentWord = provider.currentWord;
+    final currentWordText = currentWord?.word ?? '';
+    final videoUrl = currentWord?.videoUrl ?? '';
 
     return Container(
       decoration: BoxDecoration(
@@ -112,7 +117,7 @@ class _SignVideoPlayerState extends State<SignVideoPlayer> {
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.08),
+            color: Colors.black.withValues(alpha: 0.08),
             blurRadius: 16,
             offset: const Offset(0, 4),
           ),
@@ -120,89 +125,32 @@ class _SignVideoPlayerState extends State<SignVideoPlayer> {
       ),
       child: Column(
         children: [
-          // ─── Video Display Screen (Simulation Canvas) ───
+          // ─── Video Display Screen ───
           Container(
             height: 240,
             width: double.infinity,
-            decoration: const BoxDecoration(
-              borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  Color(0xFF1E1E38),
-                  Color(0xFF0F0F23),
-                ],
-              ),
+            decoration: BoxDecoration(
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+              color: isDark ? const Color(0xFF0F0F23) : Colors.black87,
             ),
             child: Stack(
               alignment: Alignment.center,
               children: [
-                // Arka plan ışık efekti
-                Positioned.fill(
-                  child: Center(
-                    child: Container(
-                      width: 140,
-                      height: 140,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: AppColors.primary.withOpacity(0.15),
-                      ),
+                if (videoUrl.isNotEmpty)
+                  CachedVideoPlayerWidget(
+                    key: ValueKey(videoUrl),
+                    videoUrl: videoUrl,
+                    autoPlay: provider.isPlaying,
+                    loop: false, // Arka arkaya oynaması için loop false
+                    borderRadius: 24,
+                  )
+                else
+                  const Center(
+                    child: Text(
+                      'Video Yok',
+                      style: TextStyle(color: Colors.white54),
                     ),
                   ),
-                ),
-
-                // İşaret Dili Animasyon Görseli/İkonu
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    AnimatedSwitcher(
-                      duration: const Duration(milliseconds: 300),
-                      transitionBuilder: (child, anim) => ScaleTransition(
-                        scale: anim,
-                        child: child,
-                      ),
-                      child: Container(
-                        key: ValueKey(currentWord),
-                        padding: const EdgeInsets.all(24),
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          gradient: const LinearGradient(
-                            colors: AppColors.primaryGradient,
-                          ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: AppColors.primary.withOpacity(0.4),
-                              blurRadius: 20,
-                              spreadRadius: 2,
-                            ),
-                          ],
-                        ),
-                        child: const Icon(
-                          Icons.back_hand_rounded,
-                          size: 56,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-
-                    // Aktif Kelime Etiketi
-                    AnimatedSwitcher(
-                      duration: const Duration(milliseconds: 200),
-                      child: Text(
-                        currentWord,
-                        key: ValueKey(currentWord),
-                        style: const TextStyle(
-                          fontSize: 26,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                          letterSpacing: 1.2,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
 
                 // Sol Üst: Kelime Sayacı (X / Y)
                 Positioned(
@@ -235,7 +183,7 @@ class _SignVideoPlayerState extends State<SignVideoPlayer> {
                     child: Container(
                       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                       decoration: BoxDecoration(
-                        color: AppColors.primary.withOpacity(0.3),
+                        color: AppColors.primary.withValues(alpha: 0.3),
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(color: AppColors.primary, width: 1),
                       ),
@@ -259,6 +207,27 @@ class _SignVideoPlayerState extends State<SignVideoPlayer> {
                       const PopupMenuItem(value: 1.0, child: Text('1.0x Normal')),
                       const PopupMenuItem(value: 1.5, child: Text('1.5x Hızlı')),
                     ],
+                  ),
+                ),
+                
+                // Alt Orta: Aktif Kelime Etiketi (Altyazı gibi)
+                Positioned(
+                  bottom: 16,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    decoration: BoxDecoration(
+                      color: Colors.black54,
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: Text(
+                      currentWordText,
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                        letterSpacing: 1.2,
+                      ),
+                    ),
                   ),
                 ),
               ],
@@ -294,7 +263,7 @@ class _SignVideoPlayerState extends State<SignVideoPlayer> {
                         ),
                       ),
                       child: Text(
-                        word,
+                        word.word,
                         style: TextStyle(
                           fontSize: 13,
                           fontWeight: isCurrent ? FontWeight.bold : FontWeight.w500,

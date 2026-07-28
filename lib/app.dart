@@ -1,5 +1,7 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'config/theme.dart';
 import 'providers/dictionary_provider.dart';
 import 'providers/recognition_provider.dart';
@@ -9,16 +11,18 @@ import 'screens/history_screen.dart';
 import 'screens/main_navigation_screen.dart';
 import 'screens/settings_screen.dart';
 import 'screens/splash_screen.dart';
+import 'screens/onboarding_screen.dart';
 
 /// Ana uygulama widget'ı
 class ASLTranslatorApp extends StatelessWidget {
-  const ASLTranslatorApp({super.key});
+  final SharedPreferences prefs;
+  const ASLTranslatorApp({super.key, required this.prefs});
 
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => SettingsProvider()),
+        ChangeNotifierProvider(create: (_) => SettingsProvider(prefs)),
         ChangeNotifierProvider(create: (_) => RecognitionProvider()),
         ChangeNotifierProvider(create: (_) => DictionaryProvider()),
         ChangeNotifierProvider(create: (_) => TextToSignProvider()),
@@ -28,6 +32,9 @@ class ASLTranslatorApp extends StatelessWidget {
           return MaterialApp(
             title: 'ASL Translator',
             debugShowCheckedModeBanner: false,
+            localizationsDelegates: context.localizationDelegates,
+            supportedLocales: context.supportedLocales,
+            locale: context.locale,
             theme: AppTheme.lightTheme,
             darkTheme: AppTheme.darkTheme,
             themeMode:
@@ -45,7 +52,7 @@ class ASLTranslatorApp extends StatelessWidget {
   }
 }
 
-/// Uygulama giriş noktası — Splash → MainNavigation akışı
+/// Uygulama giriş noktası — Splash → MainNavigation / Onboarding akışı
 class _AppHome extends StatefulWidget {
   const _AppHome();
 
@@ -55,11 +62,12 @@ class _AppHome extends StatefulWidget {
 
 class _AppHomeState extends State<_AppHome> {
   bool _isLoaded = false;
+  bool _hasSeenOnboarding = false;
 
   @override
   Widget build(BuildContext context) {
     if (_isLoaded) {
-      return const MainNavigationScreen();
+      return _hasSeenOnboarding ? const MainNavigationScreen() : const OnboardingScreen();
     }
 
     return SplashScreen(
@@ -67,6 +75,9 @@ class _AppHomeState extends State<_AppHome> {
         final recognitionProvider =
             context.read<RecognitionProvider>();
         await recognitionProvider.initialize(onProgress: onProgress);
+        
+        final prefs = await SharedPreferences.getInstance();
+        _hasSeenOnboarding = prefs.getBool('has_seen_onboarding') ?? false;
       },
       onComplete: () {
         if (mounted) {

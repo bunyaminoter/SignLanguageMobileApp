@@ -1,0 +1,77 @@
+{
+  "onboarding": {
+    "welcome": {
+      "title": "ASL'ye Hoş Geldiniz",
+      "desc": "Amerikan İşaret Dili (ASL) öğrenmenin ve çeviri yapmanın en kolay yolu."
+    },
+    "dictionary": {
+      "title": "Çevrimdışı Sözlük",
+      "desc": "Yüzlerce kelimenin işaret dili videolarını internet olmadan da izleyin ve öğrenin."
+    },
+    "camera": {
+      "title": "Kamera & Çeviri",
+      "desc": "Kameranızı kullanarak işaretleri gerçek zamanlı olarak sese ve metne dönüştürün."
+    },
+    "next": "İleri",
+    "start": "Başla"
+  },
+  "home": {
+    "welcome": "Hoş Geldiniz 👋",
+    "app_name": "ASL Çevirmen",
+    "banner": {
+      "badge": "Çift Yönlü Çeviri",
+      "title": "Engelleri Kaldıran İletişim",
+      "desc": "Kameradan metne veya sesinizi işaret diline çevirin."
+    },
+    "modes_title": "Çeviri Modları",
+    "cards": {
+      "camera": {
+        "title": "İşaret Dili ➔ Metin / Ses",
+        "desc": "Kameranızı tutarak işaret dilini canlı algılayın ve sese çevirin.",
+        "badge": "CANLI ALGILAMA"
+      },
+      "voice": {
+        "title": "Metin / Ses ➔ İşaret Dili",
+        "desc": "Konuşun veya yazın, ASL videoları sırayla oynatılsın.",
+        "badge": "VİDEO ÇEVİRİCİ"
+      },
+      "dictionary": {
+        "title": "ASL İşaret Sözlüğü",
+        "desc": "100+ işaret dili kelimesini arayın ve videolarını izleyin.",
+        "badge": "KÜTÜPHANE"
+      }
+    }
+  },
+  "settings": {
+    "title": "Ayarlar",
+    "sections": {
+      "recognition": "Tanıma",
+      "tts": "Metin-Ses",
+      "appearance": "Görünüm",
+      "data": "Veri & Önbellek",
+      "about": "Hakkında",
+      "language": "Uygulama Dili"
+    },
+    "items": {
+      "confidence": "Güven Eşiği",
+      "interval": "Çıkarım Aralığı",
+      "enable_tts": "Seslendirmeyi Etkinleştir",
+      "enable_tts_sub": "Tanınan işaretleri sesli oku",
+      "auto_speak": "Otomatik Konuş",
+      "auto_speak_sub": "Her kelimeyi otomatik seslendir",
+      "tts_lang": "Seslendirme Dili",
+      "tts_rate": "Konuşma Hızı",
+      "dark_mode": "Karanlık Mod",
+      "dark_mode_sub": "Aydınlık/Karanlık tema değiştir",
+      "landmarks": "Landmark Göster",
+      "landmarks_sub": "Kamerada poz çizgilerini göster",
+      "clear_cache": "Video Önbelleğini Temizle",
+      "clear_cache_sub": "Cihaz hafızasında yer aç",
+      "cache_cleared": "Video önbelleği başarıyla temizlendi!",
+      "version": "Sürüm",
+      "model": "Model",
+      "classes": "Sınıflar",
+      "app_lang": "Uygulama Dili (Language)"
+    }
+  }
+}
