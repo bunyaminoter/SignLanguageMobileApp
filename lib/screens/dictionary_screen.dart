@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:provider/provider.dart';
 import '../config/colors.dart';
 import '../models/dictionary_word.dart';
@@ -29,7 +30,7 @@ class DictionaryScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Kütüphane',
+                        'dictionary.header'.tr(),
                         style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
@@ -38,7 +39,7 @@ class DictionaryScreen extends StatelessWidget {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        'ASL Sözlüğü',
+                        'dictionary.title'.tr(),
                         style: TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
@@ -71,7 +72,7 @@ class DictionaryScreen extends StatelessWidget {
                   color: isDark ? AppColors.darkText : AppColors.lightText,
                 ),
                 decoration: InputDecoration(
-                  hintText: 'Kelime ara (ör: BOOK, DRINK)...',
+                  hintText: 'dictionary.search_hint'.tr(),
                   hintStyle: TextStyle(
                     color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
                   ),
@@ -154,7 +155,7 @@ class DictionaryScreen extends StatelessWidget {
                             ),
                             const SizedBox(height: 12),
                             Text(
-                              'Kelime bulunamadı',
+                              'dictionary.no_results'.tr(),
                               style: TextStyle(
                                 fontSize: 16,
                                 color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
@@ -320,8 +321,8 @@ class _WordCard extends StatelessWidget {
                           color: AppColors.primary.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(20),
                         ),
-                        child: const Center(
-                          child: Text('Video bulunamadı'),
+                        child: Center(
+                          child: Text('dictionary.no_video'.tr()),
                         ),
                       ),
               ),
@@ -346,9 +347,9 @@ class _WordCard extends StatelessWidget {
                     borderRadius: BorderRadius.circular(16),
                   ),
                 ),
-                child: const Text(
-                  'Kapat',
-                  style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+                child: Text(
+                  'dictionary.close'.tr(),
+                  style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
                 ),
               ),
             ],

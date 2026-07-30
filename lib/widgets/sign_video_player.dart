@@ -1,5 +1,5 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:provider/provider.dart';
 import '../config/colors.dart';
 import '../providers/text_to_sign_provider.dart';
@@ -14,47 +14,15 @@ class SignVideoPlayer extends StatefulWidget {
 }
 
 class _SignVideoPlayerState extends State<SignVideoPlayer> {
-  Timer? _playbackTimer;
-
   @override
   void dispose() {
-    _playbackTimer?.cancel();
     super.dispose();
-  }
-
-  void _startTimer(TextToSignProvider provider) {
-    _playbackTimer?.cancel();
-    if (!provider.isPlaying || provider.sequenceWords.isEmpty) return;
-
-    // TODO: Ideally, we'd listen to the actual video end event.
-    // For now, simulating transition with a timer depending on speed.
-    final durationMs = (2500 / provider.playbackSpeed).round();
-    _playbackTimer = Timer.periodic(Duration(milliseconds: durationMs), (_) {
-      if (mounted) {
-        final p = context.read<TextToSignProvider>();
-        if (p.isPlaying) {
-          p.nextWord();
-          if (!p.isPlaying) {
-            _playbackTimer?.cancel();
-          }
-        } else {
-          _playbackTimer?.cancel();
-        }
-      }
-    });
   }
 
   @override
   Widget build(BuildContext context) {
     final provider = context.watch<TextToSignProvider>();
     final isDark = Theme.of(context).brightness == Brightness.dark;
-
-    // Timer durumunu güncelle
-    if (provider.isPlaying && (_playbackTimer == null || !_playbackTimer!.isActive)) {
-      WidgetsBinding.instance.addPostFrameCallback((_) => _startTimer(provider));
-    } else if (!provider.isPlaying) {
-      _playbackTimer?.cancel();
-    }
 
     if (provider.sequenceWords.isEmpty) {
       return Container(
@@ -84,7 +52,7 @@ class _SignVideoPlayerState extends State<SignVideoPlayer> {
             ),
             const SizedBox(height: 16),
             Text(
-              'Metin veya Sesli Cümle Girin',
+              'sign_player.empty_title'.tr(),
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
@@ -92,11 +60,11 @@ class _SignVideoPlayerState extends State<SignVideoPlayer> {
               ),
             ),
             const SizedBox(height: 6),
-            const Text(
-              'İşaret dili videoları sırayla oynatılacaktır',
+            Text(
+              'sign_player.empty_desc'.tr(),
               style: TextStyle(
                 fontSize: 13,
-                color: AppColors.darkTextSecondary,
+                color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
               ),
             ),
           ],
@@ -143,12 +111,17 @@ class _SignVideoPlayerState extends State<SignVideoPlayer> {
                     autoPlay: provider.isPlaying,
                     loop: false, // Arka arkaya oynaması için loop false
                     borderRadius: 24,
+                    onVideoFinished: () {
+                      if (provider.isPlaying && mounted) {
+                        provider.nextWord();
+                      }
+                    },
                   )
                 else
-                  const Center(
+                  Center(
                     child: Text(
-                      'Video Yok',
-                      style: TextStyle(color: Colors.white54),
+                      'sign_player.no_video'.tr(),
+                      style: const TextStyle(color: Colors.white54),
                     ),
                   ),
 
@@ -203,9 +176,9 @@ class _SignVideoPlayerState extends State<SignVideoPlayer> {
                       ),
                     ),
                     itemBuilder: (context) => [
-                      const PopupMenuItem(value: 0.5, child: Text('0.5x Yavaş')),
-                      const PopupMenuItem(value: 1.0, child: Text('1.0x Normal')),
-                      const PopupMenuItem(value: 1.5, child: Text('1.5x Hızlı')),
+                      PopupMenuItem(value: 0.5, child: Text('sign_player.speed_slow'.tr())),
+                      PopupMenuItem(value: 1.0, child: Text('sign_player.speed_normal'.tr())),
+                      PopupMenuItem(value: 1.5, child: Text('sign_player.speed_fast'.tr())),
                     ],
                   ),
                 ),

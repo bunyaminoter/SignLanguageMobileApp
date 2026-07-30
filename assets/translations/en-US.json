@@ -15,6 +15,12 @@
     "next": "Next",
     "start": "Start"
   },
+  "nav": {
+    "home": "Home",
+    "camera": "Camera",
+    "translate": "Translate",
+    "dictionary": "Dictionary"
+  },
   "home": {
     "welcome": "Welcome 👋",
     "app_name": "ASL Translator",
@@ -41,6 +47,98 @@
         "badge": "LIBRARY"
       }
     }
+  },
+  "camera": {
+    "title": "ASL Live Recognition",
+    "status": {
+      "recognition_started": "🔴 Recognition Started",
+      "recognition_stopped": "⏸️ Recognition Stopped",
+      "detection_starting": "⏳ Starting detection...",
+      "recording_video": "🔴 Recording 2s Video...",
+      "sending_to_server": "⚡ Sending to Server & Analyzing...",
+      "detected": "✅ Detected: {}",
+      "analysis_complete": "✅ Analysis Complete"
+    }
+  },
+  "camera_preview": {
+    "initializing": "Camera initializing...",
+    "rec": "REC ⏺️",
+    "ready": "READY"
+  },
+  "dictionary": {
+    "header": "Library",
+    "title": "ASL Dictionary",
+    "search_hint": "Search words (e.g. BOOK, DRINK)...",
+    "no_results": "No words found",
+    "no_video": "Video not found",
+    "close": "Close"
+  },
+  "text_to_sign": {
+    "header": "Speak & Type",
+    "title": "Text ➔ ASL Sign",
+    "input_hint": "Type the sentence you want to translate or speak into the microphone...",
+    "listening": "Listening...",
+    "microphone": "Microphone",
+    "play_signs": "Play Signs",
+    "sequence_title": "ASL Sign Sequence"
+  },
+  "sign_player": {
+    "empty_title": "Enter Text or Voice Sentence",
+    "empty_desc": "Sign language videos will play sequentially",
+    "no_video": "No Video",
+    "speed_slow": "0.5x Slow",
+    "speed_normal": "1.0x Normal",
+    "speed_fast": "1.5x Fast"
+  },
+  "prediction": {
+    "top_prediction": "🏆 TOP PREDICTION",
+    "analyzing": "ANALYZING...",
+    "analyzing_short": "Analyzing...",
+    "show_sign": "Show a sign to start"
+  },
+  "sentence": {
+    "title": "SENTENCE",
+    "empty": "Words will appear here..."
+  },
+  "action": {
+    "speak": "Speak",
+    "stop": "Stop",
+    "start": "Start",
+    "pause": "Pause",
+    "clear": "Clear",
+    "camera": "Camera"
+  },
+  "history": {
+    "title": "History",
+    "clear_all": "Clear All",
+    "empty_title": "No predictions yet",
+    "empty_desc": "Start recognizing signs to build history",
+    "time_seconds": "{}s ago",
+    "time_minutes": "{}m ago",
+    "time_hours": "{}h ago",
+    "time_days": "{}d ago"
+  },
+  "splash": {
+    "initializing": "Initializing...",
+    "loading_model": "Loading ASL model...",
+    "loading_weights": "Loading model weights...",
+    "init_engine": "Initializing inference engine...",
+    "preparing_labels": "Preparing class labels...",
+    "almost_ready": "Almost ready!",
+    "ready": "Ready! ✨",
+    "subtitle": "Real-time Sign Language Recognition"
+  },
+  "errors": {
+    "init_error": "Initialization error: {}",
+    "camera_not_ready": "Camera is not ready yet! Please wait for the camera to open.",
+    "camera_not_ready_short": "⚠️ Camera Not Ready",
+    "model_not_loaded": "Model has not been loaded yet! Please wait or check the server.",
+    "model_not_loaded_short": "⚠️ Model Not Loaded",
+    "camera_disconnected": "Camera connection lost!",
+    "camera_failed": "⚠️ Camera Failed",
+    "video_file_error": "Video file could not be created (Camera recording returned empty).",
+    "video_record_error": "⚠️ Video Record Error",
+    "server_error": "⚠️ Server / Analysis Error"
   },
   "settings": {
     "title": "Settings",

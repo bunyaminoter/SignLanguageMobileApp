@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 import '../config/colors.dart';
 import '../models/prediction.dart';
 import 'confidence_meter.dart';
@@ -91,7 +92,7 @@ class PredictionCard extends StatelessWidget {
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(
-                    '🏆 TOP PREDICTION',
+                    'prediction.top_prediction'.tr(),
                     style: TextStyle(
                       color: color,
                       fontSize: 10,
@@ -108,9 +109,9 @@ class PredictionCard extends StatelessWidget {
                       color: AppColors.accentCyan.withAlpha(40),
                       borderRadius: BorderRadius.circular(8),
                     ),
-                    child: const Row(
+                    child: Row(
                       children: [
-                        SizedBox(
+                        const SizedBox(
                           width: 10,
                           height: 10,
                           child: CircularProgressIndicator(
@@ -118,10 +119,10 @@ class PredictionCard extends StatelessWidget {
                             valueColor: AlwaysStoppedAnimation<Color>(AppColors.accentCyan),
                           ),
                         ),
-                        SizedBox(width: 6),
+                        const SizedBox(width: 6),
                         Text(
-                          'ANALYZING...',
-                          style: TextStyle(
+                          'prediction.analyzing'.tr(),
+                          style: const TextStyle(
                             color: AppColors.accentCyan,
                             fontSize: 10,
                             fontWeight: FontWeight.w700,
@@ -213,7 +214,7 @@ class PredictionCard extends StatelessWidget {
         ),
         const SizedBox(height: 8),
         Text(
-          isProcessing ? 'Analyzing...' : 'Show a sign to start',
+          isProcessing ? 'prediction.analyzing_short'.tr() : 'prediction.show_sign'.tr(),
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                 color: Theme.of(context)
                     .textTheme

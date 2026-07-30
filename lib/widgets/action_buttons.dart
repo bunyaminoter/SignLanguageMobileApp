@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 import '../config/colors.dart';
 
 /// Alt aksiyon butonları satırı
@@ -32,7 +33,7 @@ class ActionButtons extends StatelessWidget {
             icon: isSpeaking
                 ? Icons.stop_circle_rounded
                 : Icons.volume_up_rounded,
-            label: isSpeaking ? 'Stop' : 'Speak',
+            label: isSpeaking ? 'action.stop'.tr() : 'action.speak'.tr(),
             onTap: onSpeak,
             gradient: AppColors.accentGradient,
           ),
@@ -42,7 +43,7 @@ class ActionButtons extends StatelessWidget {
             icon: isRecognizing
                 ? Icons.pause_circle_rounded
                 : Icons.play_circle_rounded,
-            label: isRecognizing ? 'Pause' : 'Start',
+            label: isRecognizing ? 'action.pause'.tr() : 'action.start'.tr(),
             onTap: onToggleRecognition,
             gradient: isRecognizing
                 ? AppColors.warmGradient
@@ -53,7 +54,7 @@ class ActionButtons extends StatelessWidget {
           // Temizle butonu
           _ActionBtn(
             icon: Icons.delete_sweep_rounded,
-            label: 'Clear',
+            label: 'action.clear'.tr(),
             onTap: onClear,
             gradient: [
               AppColors.darkTextMuted,
@@ -64,7 +65,7 @@ class ActionButtons extends StatelessWidget {
           // Kamera değiştir
           _ActionBtn(
             icon: Icons.cameraswitch_rounded,
-            label: 'Camera',
+            label: 'action.camera'.tr(),
             onTap: onToggleCamera,
             gradient: [
               AppColors.primaryIndigo,

@@ -46,3 +46,20 @@ app.*.map.json
 
 # Gizli verileri içeren dosyalar (IP adresi, anahtarlar vb.)
 lib/config/constants.dart
+
+# Additional ignores from parent
+*.mp4
+*.tmp
+.env
+.packages
+ios/Pods/
+ios/.symlinks/
+ios/Flutter/Flutter.podspec
+android/.gradle/
+android/app/src/main/gen/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import '../config/colors.dart';
 
@@ -47,22 +48,22 @@ class CustomBottomNavBar extends StatelessWidget {
           duration: const Duration(milliseconds: 300),
           tabBackgroundColor: AppColors.primary,
           color: isDark ? Colors.white60 : Colors.black54,
-          tabs: const [
+          tabs: [
             GButton(
               icon: Icons.grid_view_rounded,
-              text: 'Ana Sayfa',
+              text: 'nav.home'.tr(),
             ),
             GButton(
               icon: Icons.camera_front_rounded,
-              text: 'Kamera',
+              text: 'nav.camera'.tr(),
             ),
             GButton(
               icon: Icons.translate_rounded,
-              text: 'Çevir',
+              text: 'nav.translate'.tr(),
             ),
             GButton(
               icon: Icons.menu_book_rounded,
-              text: 'Sözlük',
+              text: 'nav.dictionary'.tr(),
             ),
           ],
           selectedIndex: selectedIndex,

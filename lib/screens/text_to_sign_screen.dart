@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:provider/provider.dart';
 import '../config/colors.dart';
 import '../providers/text_to_sign_provider.dart';
@@ -56,7 +57,7 @@ class _TextToSignScreenState extends State<TextToSignScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Konuş & Yaz',
+                        'text_to_sign.header'.tr(),
                         style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
@@ -65,7 +66,7 @@ class _TextToSignScreenState extends State<TextToSignScreen> {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        'Metin ➔ ASL İşareti',
+                        'text_to_sign.title'.tr(),
                         style: TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
@@ -118,7 +119,7 @@ class _TextToSignScreenState extends State<TextToSignScreen> {
                         color: isDark ? AppColors.darkText : AppColors.lightText,
                       ),
                       decoration: InputDecoration(
-                        hintText: 'Çevirmek istediğiniz cümleyi yazın veya mikrofona konuşun...',
+                        hintText: 'text_to_sign.input_hint'.tr(),
                         hintStyle: TextStyle(
                           fontSize: 14,
                           color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
@@ -161,7 +162,7 @@ class _TextToSignScreenState extends State<TextToSignScreen> {
                                 ),
                                 const SizedBox(width: 6),
                                 Text(
-                                  provider.isListening ? 'Dinleniyor...' : 'Mikrofon',
+                                  provider.isListening ? 'text_to_sign.listening'.tr() : 'text_to_sign.microphone'.tr(),
                                   style: TextStyle(
                                     fontSize: 13,
                                     fontWeight: FontWeight.bold,
@@ -186,9 +187,9 @@ class _TextToSignScreenState extends State<TextToSignScreen> {
                             elevation: 0,
                           ),
                           icon: const Icon(Icons.play_arrow_rounded, size: 20),
-                          label: const Text(
-                            'İşaretleri Oynat',
-                            style: TextStyle(fontWeight: FontWeight.bold),
+                          label: Text(
+                            'text_to_sign.play_signs'.tr(),
+                            style: const TextStyle(fontWeight: FontWeight.bold),
                           ),
                         ),
                       ],
@@ -242,7 +243,7 @@ class _TextToSignScreenState extends State<TextToSignScreen> {
 
               // ─── Sign Video Player ───
               Text(
-                'ASL İşaret Dizilimi',
+                'text_to_sign.sequence_title'.tr(),
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,

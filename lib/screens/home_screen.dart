@@ -30,7 +30,7 @@ class HomeScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Hoş Geldiniz 👋',
+                        'home.welcome'.tr(),
                         style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
@@ -39,7 +39,7 @@ class HomeScreen extends StatelessWidget {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        'ASL Çevirmen',
+                        'home.app_name'.tr(),
                         style: TextStyle(
                           fontSize: 26,
                           fontWeight: FontWeight.w800,
@@ -99,9 +99,9 @@ class HomeScreen extends StatelessWidget {
                               color: Colors.white.withValues(alpha: 0.2),
                               borderRadius: BorderRadius.circular(12),
                             ),
-                            child: const Text(
-                              'Çift Yönlü Çeviri',
-                              style: TextStyle(
+                            child: Text(
+                              'home.banner.badge'.tr(),
+                              style: const TextStyle(
                                 fontSize: 11,
                                 fontWeight: FontWeight.bold,
                                 color: Colors.white,
@@ -109,9 +109,9 @@ class HomeScreen extends StatelessWidget {
                             ),
                           ),
                           const SizedBox(height: 10),
-                          const Text(
-                            'Engelleri Kaldıran İletişim',
-                            style: TextStyle(
+                          Text(
+                            'home.banner.title'.tr(),
+                            style: const TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
                               color: Colors.white,
@@ -119,7 +119,7 @@ class HomeScreen extends StatelessWidget {
                           ),
                           const SizedBox(height: 4),
                           Text(
-                            'Kameradan metne veya sesinizi işaret diline çevirin.',
+                            'home.banner.desc'.tr(),
                             style: TextStyle(
                               fontSize: 12,
                               color: Colors.white.withValues(alpha: 0.9),
@@ -140,7 +140,7 @@ class HomeScreen extends StatelessWidget {
 
               // ─── Hızlı Erişim Kartları ───
               Text(
-                'Çeviri Modları',
+                'home.modes_title'.tr(),
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
@@ -151,8 +151,8 @@ class HomeScreen extends StatelessWidget {
 
               // Kart 1: Kamera ile İşaret Dili Tanıma
               FeatureCard(
-                title: 'İşaret Dili ➔ Metin / Ses',
-                subtitle: 'Kameranızı tutarak işaret dilini canlı algılayın ve sese çevirin.',
+                title: 'home.cards.camera.title'.tr(),
+                subtitle: 'home.cards.camera.desc'.tr(),
                 icon: Icons.camera_front_rounded,
                 badgeText: 'home.cards.camera.badge'.tr(),
                 gradientColors: const [
@@ -165,10 +165,10 @@ class HomeScreen extends StatelessWidget {
 
               // Kart 2: Metin/Sesten İşaret Dilinize Çeviri
               FeatureCard(
-                title: 'Metin / Ses ➔ İşaret Dili',
-                subtitle: 'Konuşun veya yazın, ASL videoları sırayla oynatılsın.',
+                title: 'home.cards.voice.title'.tr(),
+                subtitle: 'home.cards.voice.desc'.tr(),
                 icon: Icons.record_voice_over_rounded,
-                badgeText: 'VİDEO ÇEVİRİCİ',
+                badgeText: 'home.cards.voice.badge'.tr(),
                 gradientColors: const [
                   Color(0xFF10B981),
                   Color(0xFF047857),
@@ -179,10 +179,10 @@ class HomeScreen extends StatelessWidget {
 
               // Kart 3: ASL Sözlük
               FeatureCard(
-                title: 'ASL İşaret Sözlüğü',
-                subtitle: '100+ işaret dili kelimesini arayın ve videolarını izleyin.',
+                title: 'home.cards.dictionary.title'.tr(),
+                subtitle: 'home.cards.dictionary.desc'.tr(),
                 icon: Icons.menu_book_rounded,
-                badgeText: 'KÜTÜPHANE',
+                badgeText: 'home.cards.dictionary.badge'.tr(),
                 gradientColors: const [
                   Color(0xFFF59E0B),
                   Color(0xFFD97706),

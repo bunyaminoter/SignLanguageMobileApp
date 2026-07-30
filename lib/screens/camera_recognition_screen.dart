@@ -1,9 +1,11 @@
 import 'package:camera/camera.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../config/colors.dart';
 import '../providers/recognition_provider.dart';
 import '../providers/settings_provider.dart';
+import '../utils/translation_helper.dart';
 import '../widgets/action_buttons.dart';
 import '../widgets/camera_preview.dart';
 import '../widgets/prediction_card.dart';
@@ -129,17 +131,17 @@ class _CameraRecognitionScreenState extends State<CameraRecognitionScreen>
     final recognitionProvider = context.watch<RecognitionProvider>();
     final settingsProvider = context.watch<SettingsProvider>();
     final state = recognitionProvider.state;
+    final isDark = settingsProvider.isDarkMode;
 
     return Scaffold(
       body: Container(
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [
-              AppColors.darkBg,
-              Color(0xFF12122A),
-            ],
+            colors: isDark
+                ? [AppColors.darkBg, const Color(0xFF12122A)]
+                : [AppColors.lightBg, AppColors.lightCard],
           ),
         ),
         child: SafeArea(
@@ -165,7 +167,7 @@ class _CameraRecognitionScreenState extends State<CameraRecognitionScreen>
                         const SizedBox(width: 8),
                         Expanded(
                           child: Text(
-                            state.errorMessage!,
+                            translateProviderMessage(state.errorMessage!),
                             style: const TextStyle(
                               color: Colors.white,
                               fontSize: 12,
@@ -192,7 +194,7 @@ class _CameraRecognitionScreenState extends State<CameraRecognitionScreen>
                     fps: state.fps,
                     isRecognizing: recognitionProvider.isRecognizing,
                     isProcessing: state.isProcessing,
-                    statusMessage: state.statusMessage,
+                    statusMessage: translateProviderMessage(state.statusMessage),
                   ),
                 ),
               ),
@@ -251,6 +253,7 @@ class _CameraRecognitionScreenState extends State<CameraRecognitionScreen>
   }
 
   Widget _buildTopBar(BuildContext context, int fps) {
+    final isDark = context.watch<SettingsProvider>().isDarkMode;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Row(
@@ -273,12 +276,12 @@ class _CameraRecognitionScreenState extends State<CameraRecognitionScreen>
                 ),
               ),
               const SizedBox(width: 10),
-              const Text(
-                'ASL Canlı Tanıma',
+              Text(
+                'camera.title'.tr(),
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w700,
-                  color: AppColors.darkText,
+                  color: isDark ? AppColors.darkText : AppColors.lightText,
                   letterSpacing: -0.3,
                 ),
               ),
@@ -311,22 +314,27 @@ class _TopBarButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = context.watch<SettingsProvider>().isDarkMode;
     return GestureDetector(
       onTap: onTap,
       child: Container(
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
-          color: AppColors.darkCard.withAlpha(180),
+          color: isDark
+              ? AppColors.darkCard.withAlpha(180)
+              : AppColors.lightCard.withAlpha(180),
           borderRadius: BorderRadius.circular(10),
           border: Border.all(
-            color: AppColors.darkBorder,
+            color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
             width: 1,
           ),
         ),
         child: Icon(
           icon,
           size: 18,
-          color: AppColors.darkTextSecondary,
+          color: isDark
+              ? AppColors.darkTextSecondary
+              : AppColors.lightTextSecondary,
         ),
       ),
     );

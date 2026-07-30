@@ -116,7 +116,7 @@ predicted_class = probs.argmax(dim=-1)  # En yüksek olasılıklı sınıf index
 
 ### Sınıf Etiketleri
 
-`wlasl_class_list.txt` dosyasından okunur:
+`asl_citizen_class_list.txt` dosyasından okunur:
 ```
 0   book
 1   drink
@@ -127,7 +127,7 @@ predicted_class = probs.argmax(dim=-1)  # En yüksek olasılıklı sınıf index
 99  wrong
 ```
 
-### Eğitim Yapılandırması (wlasl100_baseline.yaml)
+### Eğitim Yapılandırması (asl_citizen_100.yaml)
 
 | Parametre | Değer | Mobil Etkisi |
 |:----------|:------|:-------------|
@@ -236,11 +236,11 @@ from src.models.hybrid_model import HybridASLModel
 from src.export.onnx_exporter import ONNXExporter
 
 def main():
-    config = load_config("configs/experiment/wlasl100_baseline.yaml")
+    config = load_config("configs/experiment/asl_citizen_100.yaml")
     
     # Model yükleme
     model = HybridASLModel(config.model)
-    checkpoint = torch.load("outputs/wlasl100_baseline/checkpoints/best_model.pt",
+    checkpoint = torch.load("outputs/asl_citizen_100/checkpoints/best_model.pt",
                             map_location="cpu", weights_only=False)
     model.load_state_dict(checkpoint["model_state_dict"])
     model.eval()
@@ -288,7 +288,7 @@ print('Quantized model oluşturuldu.')
 
 - [ ] `exports/asl_hybrid_model.onnx` → Orijinal ONNX model (~50-80 MB beklenen)
 - [ ] `exports/asl_hybrid_model_quantized.onnx` → Quantized model (~15-25 MB beklenen)
-- [ ] `wlasl_class_list.txt` → Sınıf etiketleri dosyası (mobil uygulamaya kopyalanacak)
+- [ ] `asl_citizen_class_list.txt` → Sınıf etiketleri dosyası (mobil uygulamaya kopyalanacak)
 - [ ] ONNX model doğrulama testi geçti mi?
 - [ ] Quantized model ile orijinal model arasındaki doğruluk farkı kabul edilebilir mi? (<%2 düşüş)
 
@@ -654,7 +654,7 @@ class ASLModelService {
     );
 
     // 2. Sınıf isimlerini yükle
-    const classListText = await loadAsset('models/wlasl_class_list.txt');
+    const classListText = await loadAsset('models/asl_citizen_class_list.txt');
     classListText.split('\n').forEach(line => {
       const parts = line.trim().split(/\s+/);
       if (parts.length >= 2) {
@@ -917,7 +917,7 @@ ASLTranslatorApp/
 │   │   ├── asl_hybrid_model_quantized.onnx  # Quantized ONNX model
 │   │   ├── pose_landmarker_lite.task         # MediaPipe pose modeli
 │   │   ├── hand_landmarker.task              # MediaPipe el modeli
-│   │   └── wlasl_class_list.txt              # Sınıf etiketleri
+│   │   └── asl_citizen_class_list.txt              # Sınıf etiketleri
 │   │
 │   ├── fonts/                   # Özel fontlar
 │   └── images/                  # UI görselleri (ikon, logo vb.)
@@ -942,7 +942,7 @@ ASLTranslatorApp/
 [ ] 0.4. ONNX modelin doğrulanması (onnx.checker)
 [ ] 0.5. ONNX modelin quantize edilmesi (INT8)
 [ ] 0.6. Quantized modelin doğruluk testinin yapılması
-[ ] 0.7. wlasl_class_list.txt dosyasının kopyalanması
+[ ] 0.7. asl_citizen_class_list.txt dosyasının kopyalanması
 ```
 
 ### Faz 1: Proje Kurulumu
@@ -1022,7 +1022,7 @@ npm install @react-navigation/native
 
 ```
 [ ] 6.1. ASLModelService — model yükleme
-[ ] 6.2. Sınıf isimlerini yükleme (wlasl_class_list.txt parse)
+[ ] 6.2. Sınıf isimlerini yükleme (asl_citizen_class_list.txt parse)
 [ ] 6.3. Tensor hazırlama (HWC→CHW, uint8→float32, normalizasyon)
 [ ] 6.4. ONNX Runtime inference çağrısı
 [ ] 6.5. Softmax ve Top-K hesaplama
@@ -1180,7 +1180,7 @@ PROJE DETAYLARI:
   * right_hand_images: (1, 16, 3, 224, 224) float32 — Sağ el RGB kırpmaları [0-1]
   * mask: (1, 16) bool — Geçerli frame mask'ı
 - Model çıktısı: (1, 100) logits → softmax → sınıf olasılıkları
-- 100 ASL kelimesi tanıyabilir (wlasl_class_list.txt)
+- 100 ASL kelimesi tanıyabilir (asl_citizen_class_list.txt)
 
 YAPILACAKLAR:
 1. Expo + TypeScript projesi kur

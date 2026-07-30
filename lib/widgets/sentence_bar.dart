@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 import '../config/colors.dart';
 
 /// Cümle biriktirme alanı
@@ -47,7 +48,7 @@ class SentenceBar extends StatelessWidget {
                   ),
                   const SizedBox(width: 6),
                   Text(
-                    'SENTENCE',
+                    'sentence.title'.tr(),
                     style: TextStyle(
                       fontSize: 10,
                       fontWeight: FontWeight.w700,
@@ -105,7 +106,7 @@ class SentenceBar extends StatelessWidget {
             child: words.isEmpty
                 ? Text(
                     key: const ValueKey('empty'),
-                    'Words will appear here...',
+                    'sentence.empty'.tr(),
                     style: TextStyle(
                       fontSize: 15,
                       color: isDark

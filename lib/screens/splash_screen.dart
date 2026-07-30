@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 import '../config/colors.dart';
 
 /// Animasyonlu açılış ekranı — model yükleme göstergeli
@@ -19,7 +20,7 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen>
     with TickerProviderStateMixin {
   double _progress = 0.0;
-  String _statusText = 'Initializing...';
+  String _statusKey = 'splash.initializing';
   late AnimationController _pulseController;
   late AnimationController _fadeController;
   late Animation<double> _pulseAnimation;
@@ -54,20 +55,20 @@ class _SplashScreenState extends State<SplashScreen>
   Future<void> _startLoading() async {
     await Future.delayed(const Duration(milliseconds: 500));
 
-    setState(() => _statusText = 'Loading ASL model...');
+    setState(() => _statusKey = 'splash.loading_model');
 
     await widget.onLoad((progress) {
       if (mounted) {
         setState(() {
           _progress = progress;
           if (progress < 0.3) {
-            _statusText = 'Loading model weights...';
+            _statusKey = 'splash.loading_weights';
           } else if (progress < 0.6) {
-            _statusText = 'Initializing inference engine...';
+            _statusKey = 'splash.init_engine';
           } else if (progress < 0.9) {
-            _statusText = 'Preparing class labels...';
+            _statusKey = 'splash.preparing_labels';
           } else {
-            _statusText = 'Almost ready!';
+            _statusKey = 'splash.almost_ready';
           }
         });
       }
@@ -75,7 +76,7 @@ class _SplashScreenState extends State<SplashScreen>
 
     if (mounted) {
       setState(() {
-        _statusText = 'Ready! ✨';
+        _statusKey = 'splash.ready';
         _progress = 1.0;
       });
 
@@ -164,7 +165,7 @@ class _SplashScreenState extends State<SplashScreen>
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      'Real-time Sign Language Recognition',
+                      'splash.subtitle'.tr(),
                       style: TextStyle(
                         fontSize: 14,
                         color: AppColors.darkTextMuted,
@@ -214,8 +215,8 @@ class _SplashScreenState extends State<SplashScreen>
                         AnimatedSwitcher(
                           duration: const Duration(milliseconds: 200),
                           child: Text(
-                            _statusText,
-                            key: ValueKey(_statusText),
+                            _statusKey.tr(),
+                            key: ValueKey(_statusKey),
                             style: const TextStyle(
                               fontSize: 13,
                               color: AppColors.darkTextMuted,

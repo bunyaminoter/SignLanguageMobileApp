@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:video_player/video_player.dart';
 import '../config/colors.dart';
+import '../config/constants.dart';
 
 /// Önbellek destekli yeniden kullanılabilir video oynatıcı
 class CachedVideoPlayerWidget extends StatefulWidget {
@@ -11,6 +12,7 @@ class CachedVideoPlayerWidget extends StatefulWidget {
   final bool loop;
   final double borderRadius;
   final BoxFit fit;
+  final VoidCallback? onVideoFinished;
 
   const CachedVideoPlayerWidget({
     super.key,
@@ -19,6 +21,7 @@ class CachedVideoPlayerWidget extends StatefulWidget {
     this.loop = true,
     this.borderRadius = 20.0,
     this.fit = BoxFit.cover,
+    this.onVideoFinished,
   });
 
   @override
@@ -29,6 +32,24 @@ class _CachedVideoPlayerWidgetState extends State<CachedVideoPlayerWidget> {
   VideoPlayerController? _controller;
   bool _isLoading = true;
   String? _errorMessage;
+  bool _videoEnded = false;
+
+  void _videoListener() {
+    if (_controller == null || !mounted) return;
+    
+    if (_controller!.value.isInitialized) {
+      // Eğer video bittiyse (position >= duration)
+      if (_controller!.value.position >= _controller!.value.duration && _controller!.value.duration > Duration.zero) {
+        if (!_videoEnded) {
+          _videoEnded = true;
+          widget.onVideoFinished?.call();
+        }
+      } else if (_controller!.value.position < _controller!.value.duration) {
+        // Video baştan başlarsa veya geri sarılırsa bayrağı sıfırla
+        _videoEnded = false;
+      }
+    }
+  }
 
   @override
   void initState() {
@@ -56,11 +77,22 @@ class _CachedVideoPlayerWidgetState extends State<CachedVideoPlayerWidget> {
         _controller = null;
       }
 
-      debugPrint('Video oynatılıyor: ${widget.videoUrl}');
+      debugPrint('Orijinal Video URL: ${widget.videoUrl}');
+      
+      // Veritabanındaki eski r2 linkini proxy linkiyle dinamik olarak değiştiriyoruz
+      final finalUrl = widget.videoUrl.replaceFirst(
+        AppConstants.cloudflareOldR2Url,
+        AppConstants.cloudflareWorkerProxyUrl,
+      );
+      
+      debugPrint('Proxy Üzerinden Oynatılıyor: $finalUrl');
+      
       _controller = VideoPlayerController.networkUrl(
-        Uri.parse(widget.videoUrl),
+        Uri.parse(finalUrl),
         httpHeaders: {'User-Agent': 'Mozilla/5.0 (Linux; Android 10; SM-G975F) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Mobile Safari/537.36'},
       );
+      
+      _controller!.addListener(_videoListener);
       await _controller!.initialize();
 
       if (widget.loop) {
@@ -88,6 +120,7 @@ class _CachedVideoPlayerWidgetState extends State<CachedVideoPlayerWidget> {
 
   @override
   void dispose() {
+    _controller?.removeListener(_videoListener);
     _controller?.dispose();
     super.dispose();
   }

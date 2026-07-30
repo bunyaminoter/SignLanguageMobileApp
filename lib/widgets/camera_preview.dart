@@ -1,4 +1,5 @@
 import 'package:camera/camera.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import '../config/colors.dart';
 
@@ -153,19 +154,19 @@ class CameraPreviewWidget extends StatelessWidget {
         ),
         borderRadius: BorderRadius.circular(19),
       ),
-      child: const Center(
+      child: Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(
+            const Icon(
               Icons.videocam_off_rounded,
               size: 48,
               color: AppColors.darkTextMuted,
             ),
-            SizedBox(height: 12),
+            const SizedBox(height: 12),
             Text(
-              'Camera initializing...',
-              style: TextStyle(
+              'camera_preview.initializing'.tr(),
+              style: const TextStyle(
                 color: AppColors.darkTextMuted,
                 fontSize: 14,
               ),
@@ -231,7 +232,7 @@ class CameraPreviewWidget extends StatelessWidget {
           ),
           const SizedBox(width: 4),
           Text(
-            active ? 'REC ⏺️' : 'READY',
+            active ? 'camera_preview.rec'.tr() : 'camera_preview.ready'.tr(),
             style: TextStyle(
               color: active ? Colors.white : AppColors.darkTextMuted,
               fontSize: 10,

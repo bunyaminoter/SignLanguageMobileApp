@@ -38,7 +38,7 @@ class RecognitionProvider extends ChangeNotifier {
       _state = _state.copyWith(modelLoaded: true);
       notifyListeners();
     } catch (e) {
-      _state = _state.copyWith(errorMessage: 'Başlatma hatası: $e');
+      _state = _state.copyWith(errorMessage: 'errors.init_error|$e');
       notifyListeners();
     }
   }
@@ -55,8 +55,8 @@ class RecognitionProvider extends ChangeNotifier {
 
     if (cameraController == null || !(cameraController.value?.isInitialized ?? false)) {
       _state = _state.copyWith(
-        errorMessage: 'Kamera henüz hazır değil! Lütfen kameranın açılmasını bekleyin.',
-        statusMessage: '⚠️ Kamera Hazır Değil',
+        errorMessage: 'errors.camera_not_ready',
+        statusMessage: 'errors.camera_not_ready_short',
       );
       notifyListeners();
       return;
@@ -64,8 +64,8 @@ class RecognitionProvider extends ChangeNotifier {
 
     if (!_state.modelLoaded) {
       _state = _state.copyWith(
-        errorMessage: 'Model henüz yüklenmedi! Lütfen bekleyin veya sunucuyu kontrol edin.',
-        statusMessage: '⚠️ Model Yüklenmedi',
+        errorMessage: 'errors.model_not_loaded',
+        statusMessage: 'errors.model_not_loaded_short',
       );
       notifyListeners();
       return;
@@ -75,7 +75,7 @@ class RecognitionProvider extends ChangeNotifier {
     _isRecognizing = true;
     _activeCameraController = cameraController;
     _state = _state.copyWith(
-      statusMessage: '🔴 Tanıma Başlatıldı',
+      statusMessage: 'camera.status.recognition_started',
       clearError: true,
       clearPrediction: true,
       topKPredictions: [],
@@ -108,7 +108,7 @@ class RecognitionProvider extends ChangeNotifier {
 
     _state = _state.copyWith(
       isProcessing: false,
-      statusMessage: '⏸️ Tanıma Durduruldu',
+      statusMessage: 'camera.status.recognition_stopped',
     );
     notifyListeners();
   }
@@ -138,8 +138,8 @@ class RecognitionProvider extends ChangeNotifier {
       final bool isInitialized = cameraController.value?.isInitialized ?? false;
       if (!isInitialized) {
         _state = _state.copyWith(
-          errorMessage: 'Kamera bağlantısı kesildi!',
-          statusMessage: '⚠️ Kamera Başarısız',
+          errorMessage: 'errors.camera_disconnected',
+          statusMessage: 'errors.camera_failed',
         );
         notifyListeners();
         return;
@@ -147,7 +147,7 @@ class RecognitionProvider extends ChangeNotifier {
 
       _state = _state.copyWith(
         isProcessing: true,
-        statusMessage: '⏳ Algılama başlatılıyor...',
+        statusMessage: 'camera.status.detection_starting',
         clearError: true,
       );
       notifyListeners();
@@ -167,7 +167,7 @@ class RecognitionProvider extends ChangeNotifier {
       final bool isRecording = cameraController.value?.isRecordingVideo ?? false;
       if (!isRecording) {
         _state = _state.copyWith(
-          statusMessage: '🔴 2s Video Kaydediliyor...',
+          statusMessage: 'camera.status.recording_video',
         );
         notifyListeners();
 
@@ -194,7 +194,7 @@ class RecognitionProvider extends ChangeNotifier {
 
         if (videoFile != null && videoFile.path != null) {
           _state = _state.copyWith(
-            statusMessage: '⚡ Sunucuya Gönderiliyor ve Analiz Ediliyor...',
+            statusMessage: 'camera.status.sending_to_server',
           );
           notifyListeners();
 
@@ -206,8 +206,8 @@ class RecognitionProvider extends ChangeNotifier {
             topKPredictions: result.predictions,
             lastInferenceTimeMs: result.inferenceTimeMs,
             statusMessage: topLabel.isNotEmpty
-                ? '✅ Algılandı: $topLabel'
-                : '✅ Analiz Tamamlandı',
+                ? 'camera.status.detected|$topLabel'
+                : 'camera.status.analysis_complete',
           );
 
           if (result.topPrediction != null) {
@@ -215,8 +215,8 @@ class RecognitionProvider extends ChangeNotifier {
           }
         } else {
           _state = _state.copyWith(
-            errorMessage: 'Video dosyası oluşturulamadı (Kamera kaydı boş döndü).',
-            statusMessage: '⚠️ Video Kayıt Hatası',
+            errorMessage: 'errors.video_file_error',
+            statusMessage: 'errors.video_record_error',
           );
         }
       }
@@ -227,7 +227,7 @@ class RecognitionProvider extends ChangeNotifier {
           .replaceAll('StateError: ', '');
       _state = _state.copyWith(
         errorMessage: cleanMsg,
-        statusMessage: '⚠️ Sunucu / Analiz Hatası',
+        statusMessage: 'errors.server_error',
       );
     } finally {
       _state = _state.copyWith(isProcessing: false);

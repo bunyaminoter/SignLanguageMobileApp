@@ -15,6 +15,12 @@
     "next": "İleri",
     "start": "Başla"
   },
+  "nav": {
+    "home": "Ana Sayfa",
+    "camera": "Kamera",
+    "translate": "Çevir",
+    "dictionary": "Sözlük"
+  },
   "home": {
     "welcome": "Hoş Geldiniz 👋",
     "app_name": "ASL Çevirmen",
@@ -41,6 +47,98 @@
         "badge": "KÜTÜPHANE"
       }
     }
+  },
+  "camera": {
+    "title": "ASL Canlı Tanıma",
+    "status": {
+      "recognition_started": "🔴 Tanıma Başlatıldı",
+      "recognition_stopped": "⏸️ Tanıma Durduruldu",
+      "detection_starting": "⏳ Algılama başlatılıyor...",
+      "recording_video": "🔴 2s Video Kaydediliyor...",
+      "sending_to_server": "⚡ Sunucuya Gönderiliyor ve Analiz Ediliyor...",
+      "detected": "✅ Algılandı: {}",
+      "analysis_complete": "✅ Analiz Tamamlandı"
+    }
+  },
+  "camera_preview": {
+    "initializing": "Kamera başlatılıyor...",
+    "rec": "REC ⏺️",
+    "ready": "HAZIR"
+  },
+  "dictionary": {
+    "header": "Kütüphane",
+    "title": "ASL Sözlüğü",
+    "search_hint": "Kelime ara (ör: BOOK, DRINK)...",
+    "no_results": "Kelime bulunamadı",
+    "no_video": "Video bulunamadı",
+    "close": "Kapat"
+  },
+  "text_to_sign": {
+    "header": "Konuş & Yaz",
+    "title": "Metin ➔ ASL İşareti",
+    "input_hint": "Çevirmek istediğiniz cümleyi yazın veya mikrofona konuşun...",
+    "listening": "Dinleniyor...",
+    "microphone": "Mikrofon",
+    "play_signs": "İşaretleri Oynat",
+    "sequence_title": "ASL İşaret Dizilimi"
+  },
+  "sign_player": {
+    "empty_title": "Metin veya Sesli Cümle Girin",
+    "empty_desc": "İşaret dili videoları sırayla oynatılacaktır",
+    "no_video": "Video Yok",
+    "speed_slow": "0.5x Yavaş",
+    "speed_normal": "1.0x Normal",
+    "speed_fast": "1.5x Hızlı"
+  },
+  "prediction": {
+    "top_prediction": "🏆 EN İYİ TAHMİN",
+    "analyzing": "ANALİZ EDİLİYOR...",
+    "analyzing_short": "Analiz ediliyor...",
+    "show_sign": "Başlamak için bir işaret gösterin"
+  },
+  "sentence": {
+    "title": "CÜMLE",
+    "empty": "Kelimeler burada görünecek..."
+  },
+  "action": {
+    "speak": "Seslendir",
+    "stop": "Durdur",
+    "start": "Başlat",
+    "pause": "Beklet",
+    "clear": "Temizle",
+    "camera": "Kamera"
+  },
+  "history": {
+    "title": "Geçmiş",
+    "clear_all": "Hepsini Sil",
+    "empty_title": "Henüz tahmin yok",
+    "empty_desc": "Geçmiş oluşturmak için işaretleri tanımaya başlayın",
+    "time_seconds": "{}sn önce",
+    "time_minutes": "{}dk önce",
+    "time_hours": "{}sa önce",
+    "time_days": "{}g önce"
+  },
+  "splash": {
+    "initializing": "Başlatılıyor...",
+    "loading_model": "ASL modeli yükleniyor...",
+    "loading_weights": "Model ağırlıkları yükleniyor...",
+    "init_engine": "Çıkarım motoru başlatılıyor...",
+    "preparing_labels": "Sınıf etiketleri hazırlanıyor...",
+    "almost_ready": "Neredeyse hazır!",
+    "ready": "Hazır! ✨",
+    "subtitle": "Gerçek Zamanlı İşaret Dili Tanıma"
+  },
+  "errors": {
+    "init_error": "Başlatma hatası: {}",
+    "camera_not_ready": "Kamera henüz hazır değil! Lütfen kameranın açılmasını bekleyin.",
+    "camera_not_ready_short": "⚠️ Kamera Hazır Değil",
+    "model_not_loaded": "Model henüz yüklenmedi! Lütfen bekleyin veya sunucuyu kontrol edin.",
+    "model_not_loaded_short": "⚠️ Model Yüklenmedi",
+    "camera_disconnected": "Kamera bağlantısı kesildi!",
+    "camera_failed": "⚠️ Kamera Başarısız",
+    "video_file_error": "Video dosyası oluşturulamadı (Kamera kaydı boş döndü).",
+    "video_record_error": "⚠️ Video Kayıt Hatası",
+    "server_error": "⚠️ Sunucu / Analiz Hatası"
   },
   "settings": {
     "title": "Ayarlar",

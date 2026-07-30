@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:provider/provider.dart';
 import '../config/colors.dart';
 import '../models/prediction.dart';
 import '../providers/recognition_provider.dart';
+import '../providers/settings_provider.dart';
 
 /// Geçmiş tahminler ekranı
 class HistoryScreen extends StatelessWidget {
@@ -12,27 +14,30 @@ class HistoryScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final recognitionProvider = context.watch<RecognitionProvider>();
     final history = recognitionProvider.state.history;
+    final isDark = context.watch<SettingsProvider>().isDarkMode;
 
     return Scaffold(
       body: Container(
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [AppColors.darkBg, Color(0xFF12122A)],
+            colors: isDark
+                ? [AppColors.darkBg, const Color(0xFF12122A)]
+                : [AppColors.lightBg, AppColors.lightCard],
           ),
         ),
         child: SafeArea(
           child: Column(
             children: [
               // Üst Bar
-              _buildAppBar(context, history.length, recognitionProvider),
+              _buildAppBar(context, history.length, recognitionProvider, isDark),
 
               // Liste
               Expanded(
                 child: history.isEmpty
-                    ? _buildEmptyState()
-                    : _buildHistoryList(history),
+                    ? _buildEmptyState(isDark)
+                    : _buildHistoryList(history, isDark),
               ),
             ],
           ),
@@ -42,7 +47,7 @@ class HistoryScreen extends StatelessWidget {
   }
 
   Widget _buildAppBar(BuildContext context, int count,
-      RecognitionProvider provider) {
+      RecognitionProvider provider, bool isDark) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Row(
@@ -55,27 +60,29 @@ class HistoryScreen extends StatelessWidget {
                 child: Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: AppColors.darkCard.withAlpha(180),
+                    color: isDark
+                        ? AppColors.darkCard.withAlpha(180)
+                        : AppColors.lightCard,
                     borderRadius: BorderRadius.circular(10),
                     border: Border.all(
-                      color: AppColors.darkBorder,
+                      color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
                       width: 1,
                     ),
                   ),
-                  child: const Icon(
+                  child: Icon(
                     Icons.arrow_back_ios_new_rounded,
                     size: 18,
-                    color: AppColors.darkTextSecondary,
+                    color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
                   ),
                 ),
               ),
               const SizedBox(width: 12),
-              const Text(
-                'History',
+              Text(
+                'history.title'.tr(),
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.w700,
-                  color: AppColors.darkText,
+                  color: isDark ? AppColors.darkText : AppColors.lightText,
                 ),
               ),
               if (count > 0) ...[
@@ -113,9 +120,9 @@ class HistoryScreen extends StatelessWidget {
                     width: 1,
                   ),
                 ),
-                child: const Text(
-                  'Clear All',
-                  style: TextStyle(
+                child: Text(
+                  'history.clear_all'.tr(),
+                  style: const TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
                     color: AppColors.error,
@@ -128,7 +135,7 @@ class HistoryScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildEmptyState() {
+  Widget _buildEmptyState(bool isDark) {
     return Center(
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -136,23 +143,23 @@ class HistoryScreen extends StatelessWidget {
           Icon(
             Icons.history_rounded,
             size: 64,
-            color: AppColors.darkTextMuted.withAlpha(80),
+            color: (isDark ? AppColors.darkTextMuted : AppColors.lightTextMuted).withAlpha(80),
           ),
           const SizedBox(height: 16),
           Text(
-            'No predictions yet',
+            'history.empty_title'.tr(),
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w500,
-              color: AppColors.darkTextMuted.withAlpha(150),
+              color: (isDark ? AppColors.darkTextMuted : AppColors.lightTextMuted).withAlpha(150),
             ),
           ),
           const SizedBox(height: 8),
           Text(
-            'Start recognizing signs to build history',
+            'history.empty_desc'.tr(),
             style: TextStyle(
               fontSize: 13,
-              color: AppColors.darkTextMuted.withAlpha(100),
+              color: (isDark ? AppColors.darkTextMuted : AppColors.lightTextMuted).withAlpha(100),
             ),
           ),
         ],
@@ -160,7 +167,7 @@ class HistoryScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildHistoryList(List<HistoryEntry> history) {
+  Widget _buildHistoryList(List<HistoryEntry> history, bool isDark) {
     // Ters sırada göster (en yeni en üstte)
     final reversed = history.reversed.toList();
 
@@ -176,10 +183,12 @@ class HistoryScreen extends StatelessWidget {
           margin: const EdgeInsets.only(bottom: 8),
           padding: const EdgeInsets.all(14),
           decoration: BoxDecoration(
-            color: AppColors.darkCard.withAlpha(180),
+            color: isDark
+                ? AppColors.darkCard.withAlpha(180)
+                : AppColors.lightSurface,
             borderRadius: BorderRadius.circular(14),
             border: Border.all(
-              color: AppColors.darkBorder,
+              color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
               width: 1,
             ),
           ),
@@ -221,9 +230,9 @@ class HistoryScreen extends StatelessWidget {
                     ),
                     Text(
                       timeAgo,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 11,
-                        color: AppColors.darkTextMuted,
+                        color: isDark ? AppColors.darkTextMuted : AppColors.lightTextMuted,
                       ),
                     ),
                   ],
@@ -260,9 +269,9 @@ class HistoryScreen extends StatelessWidget {
 
   String _formatTimeAgo(DateTime timestamp) {
     final diff = DateTime.now().difference(timestamp);
-    if (diff.inSeconds < 60) return '${diff.inSeconds}s ago';
-    if (diff.inMinutes < 60) return '${diff.inMinutes}m ago';
-    if (diff.inHours < 24) return '${diff.inHours}h ago';
-    return '${diff.inDays}d ago';
+    if (diff.inSeconds < 60) return 'history.time_seconds'.tr(args: [diff.inSeconds.toString()]);
+    if (diff.inMinutes < 60) return 'history.time_minutes'.tr(args: [diff.inMinutes.toString()]);
+    if (diff.inHours < 24) return 'history.time_hours'.tr(args: [diff.inHours.toString()]);
+    return 'history.time_days'.tr(args: [diff.inDays.toString()]);
   }
 }
