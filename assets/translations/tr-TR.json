@@ -58,7 +58,10 @@
       "sending_to_server": "⚡ Sunucuya Gönderiliyor ve Analiz Ediliyor...",
       "detected": "✅ Algılandı: {}",
       "analysis_complete": "✅ Analiz Tamamlandı"
-    }
+    },
+    "ask_ai_title": "AI'a Sor",
+    "ask_ai_empty": "Önce birkaç işaret algılayın, sonra AI'a sorun!",
+    "ask_ai_thinking": "AI düşünüyor..."
   },
   "camera_preview": {
     "initializing": "Kamera başlatılıyor...",
@@ -71,6 +74,7 @@
     "search_hint": "Kelime ara (ör: BOOK, DRINK)...",
     "no_results": "Kelime bulunamadı",
     "no_video": "Video bulunamadı",
+    "word_desc": "{} işaretinin nasıl yapıldığını görmek için videoyu izleyin.",
     "close": "Kapat"
   },
   "text_to_sign": {
@@ -106,7 +110,8 @@
     "start": "Başlat",
     "pause": "Beklet",
     "clear": "Temizle",
-    "camera": "Kamera"
+    "camera": "Kamera",
+    "ask_ai": "AI'a Sor"
   },
   "history": {
     "title": "Geçmiş",
@@ -146,6 +151,7 @@
       "recognition": "Tanıma",
       "tts": "Metin-Ses",
       "appearance": "Görünüm",
+      "video": "Video",
       "data": "Veri & Önbellek",
       "about": "Hakkında",
       "language": "Uygulama Dili"
@@ -163,6 +169,8 @@
       "dark_mode_sub": "Aydınlık/Karanlık tema değiştir",
       "landmarks": "Landmark Göster",
       "landmarks_sub": "Kamerada poz çizgilerini göster",
+      "video_speed": "Video Oynatma Hızı",
+      "video_speed_sub": "İşaret dili video hızını ayarlayın",
       "clear_cache": "Video Önbelleğini Temizle",
       "clear_cache_sub": "Cihaz hafızasında yer aç",
       "cache_cleared": "Video önbelleği başarıyla temizlendi!",

@@ -154,6 +154,25 @@ class SettingsScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 16),
 
+                    // ─── Video Ayarları ───
+                    _buildSectionHeader('settings.sections.video'.tr(), Icons.video_settings_rounded),
+                    _buildCard(
+                      isDark: isDark,
+                      children: [
+                        _buildSliderTile(
+                          title: 'settings.items.video_speed'.tr(),
+                          subtitle: '${settings.videoPlaybackSpeed.toStringAsFixed(1)}x',
+                          value: settings.videoPlaybackSpeed,
+                          min: 0.5,
+                          max: 2.0,
+                          divisions: 6,
+                          onChanged: settings.setVideoPlaybackSpeed,
+                          isDark: isDark,
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+
                     // ─── Veri & Önbellek ───
                     _buildSectionHeader('settings.sections.data'.tr(), Icons.storage_rounded),
                     _buildCard(

@@ -265,7 +265,9 @@ class _WordCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 2),
                 Text(
-                  word.description,
+                  word.description.isNotEmpty 
+                      ? word.description 
+                      : 'dictionary.word_desc'.tr(args: [word.word]),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
@@ -329,7 +331,9 @@ class _WordCard extends StatelessWidget {
               const SizedBox(height: 20),
 
               Text(
-                word.description,
+                word.description.isNotEmpty 
+                    ? word.description 
+                    : 'dictionary.word_desc'.tr(args: [word.word]),
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 14,

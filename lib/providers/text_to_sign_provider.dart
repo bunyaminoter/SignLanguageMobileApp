@@ -13,13 +13,15 @@ class TextToSignProvider extends ChangeNotifier {
   bool _isPlaying = false;
   bool _isListening = false;
   double _playbackSpeed = 1.0;
+  double? _tempPlaybackSpeed;
 
   String get inputText => _inputText;
-  List<DictionaryWord> get sequenceWords => _sequenceWords;
+  List<DictionaryWord> get sequenceWords => List.unmodifiable(_sequenceWords);
   int get currentWordIndex => _currentWordIndex;
   bool get isPlaying => _isPlaying;
   bool get isListening => _isListening;
   double get playbackSpeed => _playbackSpeed;
+  double getPlaybackSpeed(double globalSpeed) => _tempPlaybackSpeed ?? globalSpeed;
 
   DictionaryWord? get currentWord =>
       (_sequenceWords.isNotEmpty && _currentWordIndex < _sequenceWords.length)
@@ -101,6 +103,20 @@ class TextToSignProvider extends ChangeNotifier {
   void setPlaybackSpeed(double speed) {
     _playbackSpeed = speed;
     notifyListeners();
+  }
+
+  /// Geçici (oturum bazlı) oynatma hızını ayarla
+  void setTempPlaybackSpeed(double speed) {
+    _tempPlaybackSpeed = speed;
+    notifyListeners();
+  }
+
+  /// Global ayar değiştiğinde geçici hızı sıfırla ki global ayar geçerli olsun
+  void resetTempPlaybackSpeed() {
+    if (_tempPlaybackSpeed != null) {
+      _tempPlaybackSpeed = null;
+      notifyListeners();
+    }
   }
 
   /// Sesle Giriş (Speech to Text)

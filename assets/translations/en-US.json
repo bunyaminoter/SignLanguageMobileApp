@@ -58,7 +58,10 @@
       "sending_to_server": "⚡ Sending to Server & Analyzing...",
       "detected": "✅ Detected: {}",
       "analysis_complete": "✅ Analysis Complete"
-    }
+    },
+    "ask_ai_title": "Ask AI",
+    "ask_ai_empty": "Detect some signs first, then ask AI!",
+    "ask_ai_thinking": "AI is thinking..."
   },
   "camera_preview": {
     "initializing": "Camera initializing...",
@@ -71,6 +74,7 @@
     "search_hint": "Search words (e.g. BOOK, DRINK)...",
     "no_results": "No words found",
     "no_video": "Video not found",
+    "word_desc": "Watch the video to see how the {} sign is performed.",
     "close": "Close"
   },
   "text_to_sign": {
@@ -106,7 +110,8 @@
     "start": "Start",
     "pause": "Pause",
     "clear": "Clear",
-    "camera": "Camera"
+    "camera": "Camera",
+    "ask_ai": "Ask AI"
   },
   "history": {
     "title": "History",
@@ -146,6 +151,7 @@
       "recognition": "Recognition",
       "tts": "Text-to-Speech",
       "appearance": "Appearance",
+      "video": "Video",
       "data": "Data & Cache",
       "about": "About",
       "language": "Language"
@@ -163,6 +169,8 @@
       "dark_mode_sub": "Toggle dark/light theme",
       "landmarks": "Show Landmarks",
       "landmarks_sub": "Display pose landmarks on camera",
+      "video_speed": "Video Playback Speed",
+      "video_speed_sub": "Adjust sign language video speed",
       "clear_cache": "Clear Video Cache",
       "clear_cache_sub": "Free up device storage",
       "cache_cleared": "Video cache cleared successfully!",

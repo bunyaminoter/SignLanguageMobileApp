@@ -63,3 +63,7 @@ android/app/src/main/gen/
 *.njsproj
 *.sln
 *.sw?
+
+# Uygulama ekran goruntuleri
+docs/Mobil ekranları/
+

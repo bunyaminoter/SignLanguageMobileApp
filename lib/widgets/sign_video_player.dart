@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:provider/provider.dart';
 import '../config/colors.dart';
+import '../providers/settings_provider.dart';
 import '../providers/text_to_sign_provider.dart';
 import 'cached_video_player.dart';
 
@@ -22,7 +23,9 @@ class _SignVideoPlayerState extends State<SignVideoPlayer> {
   @override
   Widget build(BuildContext context) {
     final provider = context.watch<TextToSignProvider>();
+    final settings = context.watch<SettingsProvider>();
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final currentSpeed = provider.getPlaybackSpeed(settings.videoPlaybackSpeed);
 
     if (provider.sequenceWords.isEmpty) {
       return Container(
@@ -106,11 +109,12 @@ class _SignVideoPlayerState extends State<SignVideoPlayer> {
               children: [
                 if (videoUrl.isNotEmpty)
                   CachedVideoPlayerWidget(
-                    key: ValueKey(videoUrl),
+                    key: ValueKey('${videoUrl}_$currentSpeed'),
                     videoUrl: videoUrl,
                     autoPlay: provider.isPlaying,
                     loop: false, // Arka arkaya oynaması için loop false
                     borderRadius: 24,
+                    playbackSpeed: currentSpeed,
                     onVideoFinished: () {
                       if (provider.isPlaying && mounted) {
                         provider.nextWord();
@@ -151,8 +155,10 @@ class _SignVideoPlayerState extends State<SignVideoPlayer> {
                   top: 14,
                   right: 16,
                   child: PopupMenuButton<double>(
-                    initialValue: provider.playbackSpeed,
-                    onSelected: (speed) => provider.setPlaybackSpeed(speed),
+                    initialValue: currentSpeed,
+                    onSelected: (speed) {
+                      provider.setTempPlaybackSpeed(speed);
+                    },
                     child: Container(
                       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                       decoration: BoxDecoration(
@@ -165,7 +171,7 @@ class _SignVideoPlayerState extends State<SignVideoPlayer> {
                           const Icon(Icons.speed_rounded, size: 14, color: Colors.white),
                           const SizedBox(width: 4),
                           Text(
-                            '${provider.playbackSpeed}x',
+                            '${currentSpeed}x',
                             style: const TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.bold,
@@ -179,6 +185,7 @@ class _SignVideoPlayerState extends State<SignVideoPlayer> {
                       PopupMenuItem(value: 0.5, child: Text('sign_player.speed_slow'.tr())),
                       PopupMenuItem(value: 1.0, child: Text('sign_player.speed_normal'.tr())),
                       PopupMenuItem(value: 1.5, child: Text('sign_player.speed_fast'.tr())),
+                      PopupMenuItem(value: 2.0, child: Text('2.0x')),
                     ],
                   ),
                 ),

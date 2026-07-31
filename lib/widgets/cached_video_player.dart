@@ -13,6 +13,7 @@ class CachedVideoPlayerWidget extends StatefulWidget {
   final double borderRadius;
   final BoxFit fit;
   final VoidCallback? onVideoFinished;
+  final double playbackSpeed;
 
   const CachedVideoPlayerWidget({
     super.key,
@@ -22,6 +23,7 @@ class CachedVideoPlayerWidget extends StatefulWidget {
     this.borderRadius = 20.0,
     this.fit = BoxFit.cover,
     this.onVideoFinished,
+    this.playbackSpeed = 1.0,
   });
 
   @override
@@ -62,6 +64,8 @@ class _CachedVideoPlayerWidgetState extends State<CachedVideoPlayerWidget> {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.videoUrl != widget.videoUrl) {
       _initializeVideo();
+    } else if (oldWidget.playbackSpeed != widget.playbackSpeed) {
+      _controller?.setPlaybackSpeed(widget.playbackSpeed);
     }
   }
 
@@ -101,6 +105,11 @@ class _CachedVideoPlayerWidgetState extends State<CachedVideoPlayerWidget> {
 
       if (widget.autoPlay) {
         await _controller!.play();
+      }
+
+      // Oynatma hızını ayarla
+      if (widget.playbackSpeed != 1.0) {
+        await _controller!.setPlaybackSpeed(widget.playbackSpeed);
       }
 
       if (mounted) {

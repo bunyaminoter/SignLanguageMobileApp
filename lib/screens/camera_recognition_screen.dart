@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../config/colors.dart';
 import '../providers/recognition_provider.dart';
 import '../providers/settings_provider.dart';
+import '../services/gemini_service.dart';
 import '../utils/translation_helper.dart';
 import '../widgets/action_buttons.dart';
 import '../widgets/camera_preview.dart';
@@ -103,7 +104,7 @@ class _CameraRecognitionScreenState extends State<CameraRecognitionScreen>
 
     _cameraController = CameraController(
       camera,
-      ResolutionPreset.low, // Düşük çözünürlük: hızlı upload + hızlı inference
+      ResolutionPreset.high, // Yüksek çözünürlük: USB üzerinden hızlı olduğu için daha net veri
       enableAudio: false,
     );
 
@@ -184,9 +185,8 @@ class _CameraRecognitionScreenState extends State<CameraRecognitionScreen>
                   ),
                 ),
 
-              // ─── Kamera Alanı ───
-              Expanded(
-                flex: 5,
+              // ─── Kamera Alanı (AspectRatio ile sabit oran) ───
+              Flexible(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: CameraPreviewWidget(
@@ -198,9 +198,9 @@ class _CameraRecognitionScreenState extends State<CameraRecognitionScreen>
                   ),
                 ),
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 6),
 
-              // ─── Tahmin Kartı ───
+              // ─── Tahmin Kartı (Sadece tahmin veya işlem varsa göster) ───
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: PredictionCard(
@@ -225,7 +225,7 @@ class _CameraRecognitionScreenState extends State<CameraRecognitionScreen>
                   onSmooth: () => recognitionProvider.smoothSentence(),
                 ),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 4),
 
               // ─── Aksiyon Butonları ───
               ActionButtons(
@@ -244,13 +244,41 @@ class _CameraRecognitionScreenState extends State<CameraRecognitionScreen>
                     recognitionProvider.startRecognition(_cameraController);
                   }
                 },
+                onAskAI: () => _showAskAIBottomSheet(context, recognitionProvider),
                 onClear: () => recognitionProvider.clearSentence(),
                 onToggleCamera: _toggleCamera,
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 4),
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  /// AI'a Sor bottom sheet
+  void _showAskAIBottomSheet(BuildContext context, RecognitionProvider recognitionProvider) {
+    final isDark = context.read<SettingsProvider>().isDarkMode;
+    final words = recognitionProvider.state.sentenceBuffer;
+
+    if (words.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('camera.ask_ai_empty'.tr()),
+          backgroundColor: AppColors.primaryPurple,
+          duration: const Duration(seconds: 2),
+        ),
+      );
+      return;
+    }
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => _AskAIBottomSheet(
+        words: words,
+        isDark: isDark,
       ),
     );
   }
@@ -339,6 +367,203 @@ class _TopBarButton extends StatelessWidget {
               ? AppColors.darkTextSecondary
               : AppColors.lightTextSecondary,
         ),
+      ),
+    );
+  }
+}
+
+/// AI'a Sor Bottom Sheet Widget'ı
+class _AskAIBottomSheet extends StatefulWidget {
+  final List<String> words;
+  final bool isDark;
+
+  const _AskAIBottomSheet({
+    required this.words,
+    required this.isDark,
+  });
+
+  @override
+  State<_AskAIBottomSheet> createState() => _AskAIBottomSheetState();
+}
+
+class _AskAIBottomSheetState extends State<_AskAIBottomSheet> {
+  final GeminiService _geminiService = GeminiService();
+  String? _aiResponse;
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _askAI();
+  }
+
+  Future<void> _askAI() async {
+    try {
+      final sentence = widget.words.join(' ');
+      final response = await _geminiService.sendMessage(
+        'The user signed these ASL words: "$sentence". '
+        'Can you help understand and respond to what they are trying to say? '
+        'Keep your response short (1-2 sentences).',
+      );
+      if (mounted) {
+        setState(() {
+          _aiResponse = response;
+          _isLoading = false;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _aiResponse = 'Error: $e';
+          _isLoading = false;
+        });
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: widget.isDark ? AppColors.darkCard : Colors.white,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+        border: Border.all(
+          color: widget.isDark ? AppColors.darkBorder : AppColors.lightBorder,
+        ),
+      ),
+      padding: const EdgeInsets.all(20),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Üst çizgi (drag handle)
+          Center(
+            child: Container(
+              width: 40,
+              height: 4,
+              decoration: BoxDecoration(
+                color: widget.isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
+
+          // Başlık
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  gradient: const LinearGradient(
+                    colors: AppColors.primaryGradient,
+                  ),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: const Icon(
+                  Icons.smart_toy_rounded,
+                  size: 20,
+                  color: Colors.white,
+                ),
+              ),
+              const SizedBox(width: 12),
+              Text(
+                'camera.ask_ai_title'.tr(),
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700,
+                  color: widget.isDark ? AppColors.darkText : AppColors.lightText,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+
+          // Algılanan kelimeler
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+            decoration: BoxDecoration(
+              color: widget.isDark
+                  ? AppColors.darkCardLight
+                  : AppColors.lightCard,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Wrap(
+              spacing: 6,
+              runSpacing: 4,
+              children: widget.words.map((w) => Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                decoration: BoxDecoration(
+                  color: AppColors.primaryPurple.withAlpha(20),
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(
+                    color: AppColors.primaryPurple.withAlpha(60),
+                  ),
+                ),
+                child: Text(
+                  w,
+                  style: TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.primaryPurple,
+                  ),
+                ),
+              )).toList(),
+            ),
+          ),
+          const SizedBox(height: 16),
+
+          // AI Yanıtı
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: widget.isDark
+                  ? AppColors.primary.withAlpha(15)
+                  : AppColors.primary.withAlpha(8),
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                color: AppColors.primary.withAlpha(40),
+              ),
+            ),
+            child: _isLoading
+                ? Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const SizedBox(
+                        width: 18,
+                        height: 18,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          valueColor: AlwaysStoppedAnimation<Color>(AppColors.primaryPurple),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Text(
+                        'camera.ask_ai_thinking'.tr(),
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontStyle: FontStyle.italic,
+                          color: widget.isDark
+                              ? AppColors.darkTextSecondary
+                              : AppColors.lightTextSecondary,
+                        ),
+                      ),
+                    ],
+                  )
+                : Text(
+                    _aiResponse ?? '',
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w500,
+                      color: widget.isDark ? AppColors.darkText : AppColors.lightText,
+                      height: 1.5,
+                    ),
+                  ),
+          ),
+          const SizedBox(height: 20),
+        ],
       ),
     );
   }

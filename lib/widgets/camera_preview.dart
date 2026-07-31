@@ -24,118 +24,134 @@ class CameraPreviewWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(20),
-      child: Container(
-        decoration: BoxDecoration(
-          color: AppColors.darkCard,
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(
-            color: isRecognizing
-                ? AppColors.error.withAlpha(150)
-                : AppColors.darkBorder,
-            width: isRecognizing ? 2 : 1,
+    // Kamera aspect ratio'su (ön kamera genelde 4:3 yatayda → dikeyde 3:4)
+    final double cameraAspectRatio =
+        (controller != null && controller!.value.isInitialized)
+            ? (1 / controller!.value.aspectRatio) // Dikey moda çevir
+            : (3 / 4); // Varsayılan portre oranı
+
+    return AspectRatio(
+      aspectRatio: cameraAspectRatio.clamp(0.5, 0.85), // 9:16 ile 3:4 arası sınırla
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(20),
+        child: Container(
+          decoration: BoxDecoration(
+            color: AppColors.darkCard,
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(
+              color: isRecognizing
+                  ? AppColors.error.withAlpha(150)
+                  : AppColors.darkBorder,
+              width: isRecognizing ? 2 : 1,
+            ),
           ),
-        ),
-        child: Stack(
-          fit: StackFit.expand,
-          children: [
-            // Kamera görüntüsü
-            if (controller != null && controller!.value.isInitialized)
-              ClipRRect(
-                borderRadius: BorderRadius.circular(19),
-                child: CameraPreview(controller!),
-              )
-            else
-              _buildPlaceholder(),
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              // Kamera görüntüsü — FittedBox ile oranı koruyarak kırp
+              if (controller != null && controller!.value.isInitialized)
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(19),
+                  child: FittedBox(
+                    fit: BoxFit.cover,
+                    child: SizedBox(
+                      width: controller!.value.previewSize!.height,
+                      height: controller!.value.previewSize!.width,
+                      child: CameraPreview(controller!),
+                    ),
+                  ),
+                )
+              else
+                _buildPlaceholder(),
 
-            // Overlay bilgiler
-            if (showOverlay) ...[
-              // FPS göstergesi
-              Positioned(
-                top: 12,
-                right: 12,
-                child: _buildFpsBadge(),
-              ),
-
-              // REC göstergesi (tanıma sırasında)
-              Positioned(
-                top: 12,
-                left: 12,
-                child: _buildRecBadge(),
-              ),
-
-              // Canlı Durum Banner'ı (Kamera altında)
-              if (statusMessage != null && statusMessage!.isNotEmpty)
+              // Overlay bilgiler
+              if (showOverlay) ...[
+                // FPS göstergesi
                 Positioned(
-                  bottom: 8,
-                  left: 12,
+                  top: 12,
                   right: 12,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                    decoration: BoxDecoration(
-                      color: Colors.black.withAlpha(180),
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(
-                        color: isProcessing ? AppColors.accentCyan : Colors.white24,
-                        width: 1,
+                  child: _buildFpsBadge(),
+                ),
+
+                // REC göstergesi (tanıma sırasında)
+                Positioned(
+                  top: 12,
+                  left: 12,
+                  child: _buildRecBadge(),
+                ),
+
+                // Canlı Durum Banner'ı (Kamera altında)
+                if (statusMessage != null && statusMessage!.isNotEmpty)
+                  Positioned(
+                    bottom: 8,
+                    left: 12,
+                    right: 12,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                      decoration: BoxDecoration(
+                        color: Colors.black.withAlpha(180),
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(
+                          color: isProcessing ? AppColors.accentCyan : Colors.white24,
+                          width: 1,
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          if (isProcessing) ...[
+                            const SizedBox(
+                              width: 12,
+                              height: 12,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                valueColor: AlwaysStoppedAnimation<Color>(AppColors.accentCyan),
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                          ],
+                          Flexible(
+                            child: Text(
+                              statusMessage!,
+                              style: TextStyle(
+                                color: isProcessing ? AppColors.accentCyan : Colors.white,
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        if (isProcessing) ...[
-                          const SizedBox(
-                            width: 12,
-                            height: 12,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                              valueColor: AlwaysStoppedAnimation<Color>(AppColors.accentCyan),
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                        ],
-                        Flexible(
-                          child: Text(
-                            statusMessage!,
-                            style: TextStyle(
-                              color: isProcessing ? AppColors.accentCyan : Colors.white,
-                              fontSize: 12,
-                              fontWeight: FontWeight.w600,
-                            ),
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                      ],
-                    ),
                   ),
-                ),
 
-              // Alt gradient overlay
-              Positioned(
-                bottom: 0,
-                left: 0,
-                right: 0,
-                child: Container(
-                  height: 60,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [
-                        Colors.transparent,
-                        Colors.black.withAlpha(120),
-                      ],
-                    ),
-                    borderRadius: const BorderRadius.only(
-                      bottomLeft: Radius.circular(19),
-                      bottomRight: Radius.circular(19),
+                // Alt gradient overlay
+                Positioned(
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  child: Container(
+                    height: 60,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Colors.transparent,
+                          Colors.black.withAlpha(120),
+                        ],
+                      ),
+                      borderRadius: const BorderRadius.only(
+                        bottomLeft: Radius.circular(19),
+                        bottomRight: Radius.circular(19),
+                      ),
                     ),
                   ),
                 ),
-              ),
+              ],
             ],
-          ],
+          ),
         ),
       ),
     );

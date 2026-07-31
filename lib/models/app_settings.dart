@@ -10,6 +10,7 @@ class AppSettings {
   final bool showLandmarks;
   final bool isDarkMode;
   final bool autoSpeak;
+  final double videoPlaybackSpeed;
 
   const AppSettings({
     this.confidenceThreshold = AppConstants.defaultConfidenceThreshold,
@@ -20,6 +21,7 @@ class AppSettings {
     this.showLandmarks = false,
     this.isDarkMode = true,
     this.autoSpeak = false,
+    this.videoPlaybackSpeed = 1.0,
   });
 
   AppSettings copyWith({
@@ -31,6 +33,7 @@ class AppSettings {
     bool? showLandmarks,
     bool? isDarkMode,
     bool? autoSpeak,
+    double? videoPlaybackSpeed,
   }) {
     return AppSettings(
       confidenceThreshold: confidenceThreshold ?? this.confidenceThreshold,
@@ -41,6 +44,7 @@ class AppSettings {
       showLandmarks: showLandmarks ?? this.showLandmarks,
       isDarkMode: isDarkMode ?? this.isDarkMode,
       autoSpeak: autoSpeak ?? this.autoSpeak,
+      videoPlaybackSpeed: videoPlaybackSpeed ?? this.videoPlaybackSpeed,
     );
   }
 }

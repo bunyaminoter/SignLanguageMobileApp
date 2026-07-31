@@ -73,7 +73,7 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
 
     _cameraController = CameraController(
       camera,
-      ResolutionPreset.medium,
+      ResolutionPreset.high,
       enableAudio: false,
       imageFormatGroup: ImageFormatGroup.jpeg,
     );

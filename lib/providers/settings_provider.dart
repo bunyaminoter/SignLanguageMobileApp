@@ -21,6 +21,7 @@ class SettingsProvider extends ChangeNotifier {
       showLandmarks: _prefs.getBool('showLandmarks') ?? true,
       isDarkMode: _prefs.getBool('isDarkMode') ?? true,
       autoSpeak: _prefs.getBool('autoSpeak') ?? false,
+      videoPlaybackSpeed: _prefs.getDouble('videoPlaybackSpeed') ?? 1.0,
     );
   }
 
@@ -33,6 +34,7 @@ class SettingsProvider extends ChangeNotifier {
     await _prefs.setBool('showLandmarks', _settings.showLandmarks);
     await _prefs.setBool('isDarkMode', _settings.isDarkMode);
     await _prefs.setBool('autoSpeak', _settings.autoSpeak);
+    await _prefs.setDouble('videoPlaybackSpeed', _settings.videoPlaybackSpeed);
   }
 
   AppSettings get settings => _settings;
@@ -46,6 +48,7 @@ class SettingsProvider extends ChangeNotifier {
   bool get showLandmarks => _settings.showLandmarks;
   bool get isDarkMode => _settings.isDarkMode;
   bool get autoSpeak => _settings.autoSpeak;
+  double get videoPlaybackSpeed => _settings.videoPlaybackSpeed;
 
   void updateConfidenceThreshold(double value) {
     _settings = _settings.copyWith(confidenceThreshold: value);
@@ -91,6 +94,12 @@ class SettingsProvider extends ChangeNotifier {
 
   void toggleAutoSpeak() {
     _settings = _settings.copyWith(autoSpeak: !_settings.autoSpeak);
+    _saveSettings();
+    notifyListeners();
+  }
+
+  void setVideoPlaybackSpeed(double speed) {
+    _settings = _settings.copyWith(videoPlaybackSpeed: speed);
     _saveSettings();
     notifyListeners();
   }

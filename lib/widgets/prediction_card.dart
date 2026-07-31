@@ -21,6 +21,11 @@ class PredictionCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
+    // Tahmin yoksa hiç yer kaplama (isProcessing durumu kamera overlay'inde gösterilir)
+    if (prediction == null) {
+      return const SizedBox.shrink();
+    }
+
     return AnimatedSwitcher(
       duration: const Duration(milliseconds: 400),
       transitionBuilder: (child, animation) {
@@ -39,7 +44,7 @@ class PredictionCard extends StatelessWidget {
         );
       },
       child: Container(
-        key: ValueKey(prediction?.label ?? 'empty'),
+        key: ValueKey(prediction!.label),
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: isDark
@@ -47,26 +52,20 @@ class PredictionCard extends StatelessWidget {
               : AppColors.lightSurface,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
-            color: prediction != null
-                ? AppColors.confidenceColor(prediction!.confidence)
-                    .withAlpha(80)
-                : (isDark ? AppColors.darkBorder : AppColors.lightBorder),
+            color: AppColors.confidenceColor(prediction!.confidence)
+                    .withAlpha(80),
             width: 1.5,
           ),
-          boxShadow: prediction != null
-              ? [
-                  BoxShadow(
-                    color: AppColors.confidenceColor(prediction!.confidence)
-                        .withAlpha(30),
-                    blurRadius: 20,
-                    spreadRadius: 0,
-                  ),
-                ]
-              : null,
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.confidenceColor(prediction!.confidence)
+                  .withAlpha(30),
+              blurRadius: 20,
+              spreadRadius: 0,
+            ),
+          ],
         ),
-        child: prediction != null
-            ? _buildPredictionContent(context)
-            : _buildEmptyContent(context),
+        child: _buildPredictionContent(context),
       ),
     );
   }
@@ -179,49 +178,6 @@ class PredictionCard extends StatelessWidget {
           confidence: pred.confidence,
           height: 6,
           showLabel: false,
-        ),
-      ],
-    );
-  }
-
-  Widget _buildEmptyContent(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        AnimatedSwitcher(
-          duration: const Duration(milliseconds: 300),
-          child: isProcessing
-              ? const SizedBox(
-                  key: ValueKey('loading'),
-                  height: 32,
-                  width: 32,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 2.5,
-                    valueColor:
-                        AlwaysStoppedAnimation<Color>(AppColors.primaryPurple),
-                  ),
-                )
-              : Icon(
-                  Icons.sign_language_rounded,
-                  key: const ValueKey('icon'),
-                  size: 40,
-                  color: Theme.of(context)
-                      .textTheme
-                      .bodySmall
-                      ?.color
-                      ?.withAlpha(100),
-                ),
-        ),
-        const SizedBox(height: 8),
-        Text(
-          isProcessing ? 'prediction.analyzing_short'.tr() : 'prediction.show_sign'.tr(),
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Theme.of(context)
-                    .textTheme
-                    .bodySmall
-                    ?.color
-                    ?.withAlpha(150),
-              ),
         ),
       ],
     );

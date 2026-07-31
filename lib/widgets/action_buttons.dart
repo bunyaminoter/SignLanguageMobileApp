@@ -8,6 +8,7 @@ class ActionButtons extends StatelessWidget {
   final VoidCallback? onClear;
   final VoidCallback? onToggleCamera;
   final VoidCallback? onToggleRecognition;
+  final VoidCallback? onAskAI;
   final bool isRecognizing;
   final bool isSpeaking;
 
@@ -17,6 +18,7 @@ class ActionButtons extends StatelessWidget {
     this.onClear,
     this.onToggleCamera,
     this.onToggleRecognition,
+    this.onAskAI,
     this.isRecognizing = false,
     this.isSpeaking = false,
   });
@@ -24,7 +26,7 @@ class ActionButtons extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
@@ -49,6 +51,14 @@ class ActionButtons extends StatelessWidget {
                 ? AppColors.warmGradient
                 : AppColors.successGradient,
             isLarge: true,
+          ),
+
+          // AI'a Sor butonu
+          _ActionBtn(
+            icon: Icons.smart_toy_rounded,
+            label: 'action.ask_ai'.tr(),
+            onTap: onAskAI,
+            gradient: AppColors.primaryGradient,
           ),
 
           // Temizle butonu
@@ -122,8 +132,8 @@ class _ActionBtnState extends State<_ActionBtn>
 
   @override
   Widget build(BuildContext context) {
-    final size = widget.isLarge ? 60.0 : 48.0;
-    final iconSize = widget.isLarge ? 28.0 : 22.0;
+    final size = widget.isLarge ? 54.0 : 42.0;
+    final iconSize = widget.isLarge ? 26.0 : 20.0;
 
     return GestureDetector(
       onTapDown: (_) => _controller.forward(),

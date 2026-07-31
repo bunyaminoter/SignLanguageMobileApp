@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:provider/provider.dart';
 import '../config/colors.dart';
+import '../providers/settings_provider.dart';
 import '../providers/sign_ai_provider.dart';
 import 'cached_video_player.dart';
 
@@ -13,10 +14,12 @@ class AvatarPlayerWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final provider = context.watch<SignAiProvider>();
+    final settings = context.watch<SettingsProvider>();
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final currentWord = provider.currentSignWord;
     final videoUrl = currentWord?.videoUrl ?? '';
     final hasSequence = provider.activeSignSequence.isNotEmpty;
+    final currentSpeed = provider.getPlaybackSpeed(settings.videoPlaybackSpeed);
 
     return Container(
       decoration: BoxDecoration(
@@ -36,7 +39,7 @@ class AvatarPlayerWidget extends StatelessWidget {
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(20),
-        child: hasSequence ? _buildActivePlayer(provider, videoUrl, isDark) : _buildIdleState(isDark),
+        child: hasSequence ? _buildActivePlayer(provider, videoUrl, currentSpeed, isDark) : _buildIdleState(isDark),
       ),
     );
   }
@@ -101,7 +104,7 @@ class AvatarPlayerWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildActivePlayer(SignAiProvider provider, String videoUrl, bool isDark) {
+  Widget _buildActivePlayer(SignAiProvider provider, String videoUrl, double speed, bool isDark) {
     return Stack(
       alignment: Alignment.center,
       children: [
@@ -111,12 +114,13 @@ class AvatarPlayerWidget extends StatelessWidget {
             width: double.infinity,
             height: double.infinity,
             child: CachedVideoPlayerWidget(
-              key: ValueKey(videoUrl),
+              key: ValueKey('${videoUrl}_$speed'),
               videoUrl: videoUrl,
               autoPlay: provider.isPlayingSigns,
               loop: false,
               borderRadius: 0,
               fit: BoxFit.contain,
+              playbackSpeed: speed,
               onVideoFinished: () {
                 provider.nextSign();
               },
@@ -152,31 +156,72 @@ class AvatarPlayerWidget extends StatelessWidget {
           ),
         ),
 
-        // Sağ üst: AI rozeti
+        // Sağ üst: Hız Ayarı ve AI Rozeti
         Positioned(
           top: 10,
           right: 10,
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-            decoration: BoxDecoration(
-              gradient: const LinearGradient(colors: AppColors.primaryGradient),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: const Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(Icons.auto_awesome, size: 12, color: Colors.white),
-                SizedBox(width: 3),
-                Text(
-                  'SignAI',
-                  style: TextStyle(
-                    fontSize: 10,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Hız Butonu
+              PopupMenuButton<double>(
+                initialValue: speed,
+                onSelected: (newSpeed) {
+                  provider.setTempPlaybackSpeed(newSpeed);
+                },
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: Colors.black54,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Row(
+                    children: [
+                      const Icon(Icons.speed_rounded, size: 12, color: Colors.white),
+                      const SizedBox(width: 4),
+                      Text(
+                        '${speed}x',
+                        style: const TextStyle(
+                          fontSize: 10,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-              ],
-            ),
+                itemBuilder: (context) => [
+                  PopupMenuItem(value: 0.5, child: Text('sign_player.speed_slow'.tr())),
+                  PopupMenuItem(value: 1.0, child: Text('sign_player.speed_normal'.tr())),
+                  PopupMenuItem(value: 1.5, child: Text('sign_player.speed_fast'.tr())),
+                  PopupMenuItem(value: 2.0, child: Text('2.0x')),
+                ],
+              ),
+              const SizedBox(width: 6),
+              // AI Rozeti
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                decoration: BoxDecoration(
+                  gradient: const LinearGradient(colors: AppColors.primaryGradient),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: const Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.auto_awesome, size: 12, color: Colors.white),
+                    SizedBox(width: 3),
+                    Text(
+                      'SignAI',
+                      style: TextStyle(
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
         ),
 

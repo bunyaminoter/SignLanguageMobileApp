@@ -149,8 +149,20 @@ class ASLModelService {
         }
 
         final predictions = predsJson.map((item) {
+          String rawLabel = item['label'] ?? 'unknown';
+          
+          // Etiketi temizle: Rakamları ve alt çizgileri kaldır
+          String cleanedLabel = rawLabel.replaceAll(RegExp(r'\d+'), '').replaceAll('_', ' ').trim();
+          
+          // İlk harfi büyük, diğerlerini küçük yap (Örn: DOG -> Dog)
+          if (cleanedLabel.isNotEmpty) {
+            cleanedLabel = cleanedLabel[0].toUpperCase() + cleanedLabel.substring(1).toLowerCase();
+          } else {
+            cleanedLabel = rawLabel;
+          }
+
           return Prediction(
-            label: item['label'] ?? 'unknown',
+            label: cleanedLabel,
             confidence: (item['confidence'] as num).toDouble(),
             classIndex: item['classIndex'] ?? 0,
             timestamp: DateTime.now(),

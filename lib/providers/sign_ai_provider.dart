@@ -18,6 +18,7 @@ class SignAiProvider extends ChangeNotifier {
   List<DictionaryWord> _activeSignSequence = [];
   int _currentSignIndex = 0;
   bool _isPlayingSigns = false;
+  double? _tempPlaybackSpeed;
 
   // Getters
   List<ChatMessage> get messages => List.unmodifiable(_messages);
@@ -26,6 +27,7 @@ class SignAiProvider extends ChangeNotifier {
   List<DictionaryWord> get activeSignSequence => _activeSignSequence;
   int get currentSignIndex => _currentSignIndex;
   bool get isPlayingSigns => _isPlayingSigns;
+  double getPlaybackSpeed(double globalSpeed) => _tempPlaybackSpeed ?? globalSpeed;
 
   DictionaryWord? get currentSignWord =>
       (_activeSignSequence.isNotEmpty && _currentSignIndex < _activeSignSequence.length)
@@ -143,6 +145,12 @@ class SignAiProvider extends ChangeNotifier {
     _isPlayingSigns = false;
     _currentSignIndex = 0;
     _activeSignSequence = [];
+    notifyListeners();
+  }
+
+  /// Geçici (oturum bazlı) oynatma hızını ayarla
+  void setTempPlaybackSpeed(double speed) {
+    _tempPlaybackSpeed = speed;
     notifyListeners();
   }
 
