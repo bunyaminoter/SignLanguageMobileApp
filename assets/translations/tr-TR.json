@@ -171,5 +171,19 @@
       "classes": "Sınıflar",
       "app_lang": "Uygulama Dili (Language)"
     }
+  },
+  "sign_ai": {
+    "subtitle": "AI Sohbet Asistanı",
+    "avatar_idle_title": "SignAI Hazır",
+    "avatar_idle_desc": "Bir soru sorun, yanıt işaret dilinde oynatılsın",
+    "chat_empty_title": "Sohbete Başlayın",
+    "chat_empty_desc": "Yazın veya kamera ile işaret yapın, AI size işaret dilinde yanıt versin",
+    "thinking": "Düşünüyor...",
+    "play_signs": "İşaretleri Oynat",
+    "input_hint": "AI'a bir soru sorun...",
+    "mic_coming_soon": "Sesli giriş yakında aktif olacak",
+    "suggestion_1": "What is the sun?",
+    "suggestion_2": "How are you?",
+    "suggestion_3": "What is water?"
   }
 }

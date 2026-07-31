@@ -171,5 +171,19 @@
       "classes": "Classes",
       "app_lang": "App Language"
     }
+  },
+  "sign_ai": {
+    "subtitle": "AI Chat Assistant",
+    "avatar_idle_title": "SignAI Ready",
+    "avatar_idle_desc": "Ask a question and the response will play in sign language",
+    "chat_empty_title": "Start a Conversation",
+    "chat_empty_desc": "Type or use the camera to sign, and AI will respond in sign language",
+    "thinking": "Thinking...",
+    "play_signs": "Play Signs",
+    "input_hint": "Ask AI a question...",
+    "mic_coming_soon": "Voice input coming soon",
+    "suggestion_1": "What is the sun?",
+    "suggestion_2": "How are you?",
+    "suggestion_3": "What is water?"
   }
 }

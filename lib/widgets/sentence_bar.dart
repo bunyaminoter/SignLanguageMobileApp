@@ -7,12 +7,18 @@ class SentenceBar extends StatelessWidget {
   final List<String> words;
   final VoidCallback? onClear;
   final VoidCallback? onUndo;
+  final String? smoothedSentence;
+  final bool isSmoothing;
+  final VoidCallback? onSmooth;
 
   const SentenceBar({
     super.key,
     required this.words,
     this.onClear,
     this.onUndo,
+    this.smoothedSentence,
+    this.isSmoothing = false,
+    this.onSmooth,
   });
 
   @override
@@ -166,6 +172,84 @@ class SentenceBar extends StatelessWidget {
                     ),
                   ),
           ),
+
+          // ─── AI Düzeltilmiş Cümle (Gloss-to-Text) ───
+          if (words.isNotEmpty) ...[
+            const SizedBox(height: 8),
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+              decoration: BoxDecoration(
+                color: isDark
+                    ? AppColors.primary.withValues(alpha: 0.08)
+                    : AppColors.primary.withValues(alpha: 0.05),
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(
+                  color: AppColors.primary.withValues(alpha: 0.15),
+                ),
+              ),
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.auto_fix_high_rounded,
+                    size: 14,
+                    color: AppColors.primary.withValues(alpha: 0.7),
+                  ),
+                  const SizedBox(width: 6),
+                  Expanded(
+                    child: isSmoothing
+                        ? Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              SizedBox(
+                                width: 12,
+                                height: 12,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 1.5,
+                                  color: AppColors.primary.withValues(alpha: 0.5),
+                                ),
+                              ),
+                              const SizedBox(width: 6),
+                              Text(
+                                'AI düzeltiliyor...',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  fontStyle: FontStyle.italic,
+                                  color: isDark
+                                      ? AppColors.darkTextMuted
+                                      : AppColors.lightTextMuted,
+                                ),
+                              ),
+                            ],
+                          )
+                        : smoothedSentence != null && smoothedSentence!.isNotEmpty
+                            ? Text(
+                                smoothedSentence!,
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                  color: isDark
+                                      ? AppColors.darkText
+                                      : AppColors.lightText,
+                                  height: 1.3,
+                                ),
+                              )
+                            : GestureDetector(
+                                onTap: onSmooth,
+                                child: Text(
+                                  '✨ AI ile düzelt',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w500,
+                                    color: AppColors.primary,
+                                  ),
+                                ),
+                              ),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ],
       ),
     );

@@ -6,6 +6,7 @@ import 'config/theme.dart';
 import 'providers/dictionary_provider.dart';
 import 'providers/recognition_provider.dart';
 import 'providers/settings_provider.dart';
+import 'providers/sign_ai_provider.dart';
 import 'providers/text_to_sign_provider.dart';
 import 'screens/history_screen.dart';
 import 'screens/main_navigation_screen.dart';
@@ -26,6 +27,7 @@ class ASLTranslatorApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => RecognitionProvider()),
         ChangeNotifierProvider(create: (_) => DictionaryProvider()),
         ChangeNotifierProvider(create: (_) => TextToSignProvider()),
+        ChangeNotifierProvider(create: (_) => SignAiProvider()),
       ],
       child: Consumer<SettingsProvider>(
         builder: (context, settings, _) {

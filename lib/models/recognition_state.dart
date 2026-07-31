@@ -13,6 +13,8 @@ class RecognitionState {
   final int fps;
   final String? errorMessage;
   final int lastInferenceTimeMs;
+  final String? smoothedSentence;
+  final bool isSmoothing;
 
   const RecognitionState({
     this.cameraReady = false,
@@ -26,6 +28,8 @@ class RecognitionState {
     this.fps = 0,
     this.errorMessage,
     this.lastInferenceTimeMs = 0,
+    this.smoothedSentence,
+    this.isSmoothing = false,
   });
 
   String get sentence => sentenceBuffer.join(' ');
@@ -46,6 +50,9 @@ class RecognitionState {
     String? errorMessage,
     bool clearError = false,
     int? lastInferenceTimeMs,
+    String? smoothedSentence,
+    bool clearSmoothed = false,
+    bool? isSmoothing,
   }) {
     return RecognitionState(
       cameraReady: cameraReady ?? this.cameraReady,
@@ -60,6 +67,8 @@ class RecognitionState {
       fps: fps ?? this.fps,
       errorMessage: clearError ? null : (errorMessage ?? this.errorMessage),
       lastInferenceTimeMs: lastInferenceTimeMs ?? this.lastInferenceTimeMs,
+      smoothedSentence: clearSmoothed ? null : (smoothedSentence ?? this.smoothedSentence),
+      isSmoothing: isSmoothing ?? this.isSmoothing,
     );
   }
 }

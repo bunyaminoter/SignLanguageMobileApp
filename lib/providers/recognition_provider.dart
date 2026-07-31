@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../models/prediction.dart';
 import '../models/recognition_state.dart';
 import '../services/asl_model_service.dart';
+import '../services/gemini_service.dart';
 import '../services/sentence_builder.dart';
 import '../services/tts_service.dart';
 
@@ -11,6 +12,7 @@ class RecognitionProvider extends ChangeNotifier {
   final ASLModelService _modelService = ASLModelService();
   final SentenceBuilder _sentenceBuilder = SentenceBuilder();
   final TTSService _ttsService = TTSService();
+  final GeminiService _geminiService = GeminiService();
 
   RecognitionState _state = const RecognitionState();
   bool _isRecognizing = false;
@@ -264,6 +266,29 @@ class RecognitionProvider extends ChangeNotifier {
     return added;
   }
 
+  /// Cümle tamponundaki ham glosları Gemini ile akıcı cümleye çevir
+  Future<void> smoothSentence() async {
+    if (_sentenceBuilder.words.isEmpty) return;
+    if (_state.isSmoothing) return;
+
+    _state = _state.copyWith(isSmoothing: true);
+    notifyListeners();
+
+    try {
+      final smoothed = await _geminiService.glossToText(
+        List<String>.from(_sentenceBuilder.words),
+      );
+      _state = _state.copyWith(
+        smoothedSentence: smoothed,
+        isSmoothing: false,
+      );
+    } catch (e) {
+      debugPrint('[RecognitionProvider] Gloss-to-Text hatası: $e');
+      _state = _state.copyWith(isSmoothing: false);
+    }
+    notifyListeners();
+  }
+
   /// Cümleyi seslendir
   Future<void> speakSentence({
     String language = 'en-US',
@@ -288,6 +313,8 @@ class RecognitionProvider extends ChangeNotifier {
       clearPrediction: true,
       topKPredictions: [],
       isProcessing: false,
+      clearSmoothed: true,
+      isSmoothing: false,
     );
     notifyListeners();
   }
